@@ -157,22 +157,10 @@ func reverse(head *nodeInt) *nodeInt {
 // make progress of tail as the Next iteration should add to tail.Next's Next
 // if one list ends add all rest of other list to tail.Next
 
-// func print2(head *nodeInt) *nodeInt {
-	
-
-
-
-	
-
-
-
-
-
-// }
-
 func merge(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	head := head1 // Keep track of head1 as it's gonna end up being the head of final result and, it's value is being changes later on
 	result := &nodeInt{} // We don't have to worry abt the fact this linkedList starts with an empty struct(with zero values inside as 0 and nil). Doing this won't affect our end result
+	// The reason for creating adummy node like this is bcs incase the lists they give us is empty, we dont need to worry abt edge cases. so just use it
 	counter := 0
 
 	for head1 != nil && head2 != nil {
@@ -196,7 +184,7 @@ func merge(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	return head
 }
 
-// Merge the two lists in a one sorted list. Return the head of the merged linked list
+// Merge the two lists in a one sorted list. Return the head of the merged linked list (Leetcode 21)
 func mergeSorted(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	result := &nodeInt{}
 	tail := result
@@ -221,7 +209,7 @@ func mergeSorted(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	return result.Next
 }
 
-// Given head, the head of a linked list, determine if the linked list has a cycle in it (Using map)
+// Given head, the head of a linked list, determine if the linked list has a cycle in it (Using map) (Leetcode 141)
 func hasCycle(head *nodeInt) bool {
 	nodesMap := make(map[*nodeInt]bool) // Use a node's pointer itself as key to map
 
@@ -252,19 +240,17 @@ func hasCycleSlowFast(head *nodeInt) bool {
 
 	slow, fast := head, head
 
-	for { // Just try and loop until end
-		slow = slow.Next      // slow jumps one pointer ahead
-		fast = fast.Next.Next // fase jumps 2 pointer ahead. This is bcs in this way unless there's a cycle these 2 will never meet again and fast will reach to null pretty soon
+	for fast == nil || fast.Next == nil { // Just try and loop until end
 
-		if fast == nil || fast.Next == nil { // Fast is gonna reach nil first and if it does means linkedList ends and that means there's no cycle
-			return false
-		}
+		slow = slow.Next      // slow jumps one pointer ahead
+		fast = fast.Next.Next // fast jumps 2 pointer ahead. This is bcs in this way unless there's a cycle these 2 will never meet again and fast will reach to null pretty soon
 
 		if slow == fast { // If there's a cycle they will meet again for sure
 			return true
 		}
 	}
 
+	return false
 }
 
 // Given the head of a singly linked list, return the middle node of the linked list (link not empty) // 876
@@ -272,12 +258,12 @@ func findMidNode(head *nodeInt) *nodeInt {
 	slow, fast := head, head
 	for fast != nil && fast.Next != nil { // By the time fast will reach the end, slow will be at the middle of the linked List. Bcs the fast one goes twice as fast.
 		slow = slow.Next
-		fast = fast.Next
+		fast = fast.Next.Next
 	}
 	return slow
 }
 
-// Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect (the node they sahre in common). If the two linked lists have no intersection at all, return null
+// Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect (the node they share in common). If the two linked lists have no intersection at all, return null
 // If we know the distance of both lists, u can minus them and start the longer one with the diffrence ahead and travesal them and compare each node
 // Instead of calculating their lengths,
 // But a more optimal solution is, we just travesal both, when the shorter one reaches nul, we change the variable to point to longer one's head and iterate there
@@ -363,11 +349,9 @@ func main() {
 
 	new := (merge(&a, &x))
 	fmt.Println(new)
-	// print(new)
 
 	// new := (mergeSorted(&a, &x))
 	// fmt.Println(new)
-	// print(new)
 
 	// fmt.Println(hasCycle(&a))
 	// fmt.Println(findMidNode(&a))
