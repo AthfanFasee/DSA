@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 // Find nth element in fib sequence
@@ -13,13 +14,13 @@ func fib(n int, memo []int) int {
 	if memo[n] != 0 {
 		return memo[n]
 	}
-	
+
 	if n <= 2 {
 		memo[n] = 1 //Memoize
 		return 1
 	}
-	result:= fib(n-1, memo) + fib(n-2, memo)
-	memo[n] = result  // Memoize
+	result := fib(n-1, memo) + fib(n-2, memo)
+	memo[n] = result // Memoize
 	return result
 }
 
@@ -31,16 +32,16 @@ func fibBottomUp(n int) int {
 	if n == 1 || n == 2 {
 		return 1
 	}
-	
+
 	bottumUp := make([]int, n+1)
 	bottumUp[1] = 1
 	bottumUp[2] = 1
 
-		// All of these are constant time 
-	for i := 3; i <= n; i++{
+	// All of these are constant time
+	for i := 3; i <= n; i++ {
 		bottumUp[i] = bottumUp[i-1] + bottumUp[i-2]
 	}
-	
+
 	return bottumUp[n]
 
 }
@@ -52,9 +53,9 @@ func fibBottomUp(n int) int {
 // As such, following the same dynamic programming spirit, we only need to iteratively calculate the numbers, starting from 1, while maintaining the fibonacci numbers for previous two rounds.
 func fibLessSpace(n int) int {
 	if n < 2 {
-	  return n
+		return n
 	}
-  
+
 	/**
 	 * Use a "sliding window" to keep track of
 	 * the two numbers before current,
@@ -66,12 +67,12 @@ func fibLessSpace(n int) int {
 	 */
 	num, prev1, prev2 := 0, 1, 0
 	for i := 2; i <= n; i++ {
-	  num = prev1 + prev2
-	  prev1, prev2 = num, prev1
+		num = prev1 + prev2
+		prev1, prev2 = num, prev1
 	}
-  
+
 	return num
-  }
+}
 
 // Grid Traveler
 // Steps
@@ -86,12 +87,12 @@ func gridTraveler(m, n int, memo map[string]int) int {
 
 	memoKey := fmt.Sprintf("%d,%d", m, n)
 	if val, ok := memo[memoKey]; ok {
-        return val
+		return val
 	}
-	if (m == 0 || n == 0) {
+	if m == 0 || n == 0 {
 		return 0
 	}
-	if (m == 1 && n == 1) {
+	if m == 1 && n == 1 {
 		return 1
 	}
 
@@ -100,7 +101,7 @@ func gridTraveler(m, n int, memo map[string]int) int {
 	return result
 }
 
-// Find if target sum can be generated from values of an array. An element can be used multiple times. For an ex : 3 can make 300 at the end 
+// Find if target sum can be generated from values of an array. An element can be used multiple times. For an ex : 3 can make 300 at the end
 // Note than if a single element matches target sum it still rturns true
 // Steps
 // Get base cases
@@ -110,7 +111,7 @@ func canSum(targetSum int, values []int, memo map[int]bool) bool {
 	if v, ok := memo[targetSum]; ok {
 		return v
 	}
-	if targetSum == 0 {  // Even if the very first target itself is 0, its OK to return true
+	if targetSum == 0 { // Even if the very first target itself is 0, its OK to return true
 		return true
 	}
 	if targetSum < 0 {
@@ -118,13 +119,143 @@ func canSum(targetSum int, values []int, memo map[int]bool) bool {
 	}
 	for _, v := range values {
 		reminder := targetSum - v
-		if canSum(reminder, values, memo) {	// As soon as i find true, or target sum reaches 0 in any call at all, I'm returning true early
-			return true                // So the only time I need memoization at a false only scenario. 
-		}							// We can mark that wehn taget some is changed to sepcific values, that whole recursion tree will return false
+		if canSum(reminder, values, memo) { // As soon as i find true, or target sum reaches 0 in any call at all, I'm returning true early
+			return true // So the only time I need memoization at a false only scenario.
+		} // We can mark that wehn taget some is changed to sepcific values, that whole recursion tree will return false
 
 	}
 	memo[targetSum] = false // When a recursion function, finds the remaining targetsum's (mostly this will be ome middle level target) recursive tree returns false, memoize it
-	return false // Then return false to the caller
+	return false            // Then return false to the caller
+}
+
+// Find Array elements that can generate target sum. return the very first combination u find
+// Other rules r same as canSum
+func howSum(targetSum int, values []int, memo map[int][]int) []int {
+	if value, ok := memo[targetSum]; ok {
+		return value
+	}
+	if targetSum == 0 {
+		return []int{}
+	}
+	if targetSum < 0 {
+		return nil
+	}
+
+	for _, value := range values {
+		remainder := targetSum - value
+		remainderResult := howSum(remainder, values, memo)
+		if remainderResult != nil {
+			remainderResult = append(remainderResult, value)
+			return remainderResult
+		}
+	}
+
+	memo[targetSum] = nil
+	return nil
+}
+
+// Return the shortest combination of array elements that can generate targetSum
+func bestSum(targetSum int, values []int, memo map[int][]int) []int {
+	if value, ok := memo[targetSum]; ok {
+		return value
+	}
+	if targetSum == 0 {
+		return []int{}
+	}
+	if targetSum < 0 {
+		return nil
+	}
+
+	var shortestCombination []int
+
+	for _, value := range values {
+		remainder := targetSum - value
+		remainderResult := bestSum(remainder, values, memo)
+		if remainderResult != nil {
+			remainderResult = append(remainderResult, value)
+			if shortestCombination == nil {
+				shortestCombination = remainderResult
+			}
+			if len(remainderResult) < len(shortestCombination) {
+				shortestCombination = remainderResult
+			}
+		}
+	}
+	memo[targetSum] = shortestCombination
+	return shortestCombination
+}
+
+// Find if given string values can construct the target string
+func canConstruct(target string, wordBank []string, memo map[string]bool) bool {
+	if value, ok := memo[target]; ok {
+		return value
+	}
+	if target == "" {
+		return true
+	}
+
+	for _, word := range wordBank {
+		if strings.HasPrefix(target, word) {
+			suffix := target[len(word):]
+			remainderResult := canConstruct(suffix, wordBank, memo)
+			if remainderResult {
+				return true
+			}
+		}
+	}
+
+	memo[target] = false
+	return false
+}
+
+// Return the number of ways that the target can be constructed by
+// Concatenating elements of the wordbank array
+func countConstract(target string, wordBank []string, memo map[string]int) int {
+	if value, ok := memo[target]; ok {
+		return value
+	}
+	if target == "" {
+		return 1
+	}
+
+	total := 0
+
+	for _, word := range wordBank {
+		if strings.HasPrefix(target, word) {
+			suffix := target[len(word):]
+			numWaysForRest := countConstract(suffix, wordBank, memo)
+			total += numWaysForRest
+		}
+	}
+
+	memo[target] = total
+	return total
+}
+
+// Return all possible combination of the strings from wordbank which makes up target string , in a 2D array
+func allConstruct(target string, wordBank []string, memo map[string][][]string) [][]string {
+	if value, ok := memo[target]; ok {
+		return value
+	}
+	if target == "" {
+		return [][]string{{}}
+	}
+
+	var result [][]string
+
+	for _, word := range wordBank {
+		if strings.Index(target, word) == 0 {
+			suffix := target[len(word):]
+			suffixWays := allConstruct(suffix, wordBank, memo)
+			for _, way := range suffixWays {
+				targetWays := append([]string{word}, way...)
+				result = append(result, targetWays)
+			}
+		}
+	}
+
+	memo[target] = result
+	return result
 }
 
 func main() {
@@ -135,10 +266,19 @@ func main() {
 	// memo := make(map[string]int)
 	// fmt.Println(gridTraveler(3, 3, memo))
 
-	memo := make(map[int]bool)
-	fmt.Println(canSum(300, []int{7,14}, memo))
-	fmt.Println(print(300, []int{7,14}, memo))
-
-
-
+	// memo := make(map[int]bool)
+	// memo := make(map[int][]int)
+	// memo := make(map[string]bool)
+	// memo := make(map[string]int)
+	memo := make(map[string][][]string)
+	// fmt.Println(canSum(300, []int{7,14}, memo))
+	// fmt.Println(howSum(14, []int{7,14}, memo))
+	// fmt.Println(bestSum(70, []int{7, 14}, memo))
+	// fmt.Println(canConstruct("ab", []string{"ab", "abc", "cd", "def", "abcd"}, memo))
+	// fmt.Println(canConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed", []string{"eee", "e", "ee", "eee", "eee"}, memo))
+	// fmt.Println(countConstract("abcdef", []string{"ab", "abc", "cd", "def", "abcd"}, memo))
+	// fmt.Println(countConstract("purple", []string{"purp", "p", "ur", "le", "purpl"}, memo))
+	// fmt.Println(countConstract("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed=", []string{"eee", "e", "ee", "eee", "eee"}, memo))
+	fmt.Println(allConstruct("purple", []string{"purp", "p", "ur", "le", "purpl"}, memo))
+	fmt.Println(allConstruct("aaaaaaaaaaaaaaazs", []string{"a", "aa", "aaa", "a", "aaaaa"}, memo))
 }
