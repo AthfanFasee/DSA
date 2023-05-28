@@ -14,10 +14,9 @@ func fib(n int, memo []int) int {
 		return memo[n]
 	}
 	
-	if n == 1 || n == 2 {
-		result := 1
-		memo[n] = result //Memoize
-		return result
+	if n <= 2 {
+		memo[n] = 1 //Memoize
+		return 1
 	}
 	result:= fib(n-1, memo) + fib(n-2, memo)
 	memo[n] = result  // Memoize
@@ -79,6 +78,12 @@ func fibLessSpace(n int) int {
 // Get base cases (0 means can't reach at all), (1 x 1 means 1 way to reach)
 // Go right(m -1) and left (n-1) in recursive calls and add them
 func gridTraveler(m, n int, memo map[string]int) int {
+	// We swap the values of m and n if m is greater than n. This ensures that the smaller value is always assigned to m and the larger value is assigned to n.
+	// By doing this, the memo keys for scenarios like m = 3, n = 2 and m = 2, n = 3 will be the same: 2,3
+	if m > n {
+		m, n = n, m // Swap values if m is greater than n (this wont affect our end results)
+	}
+
 	memoKey := fmt.Sprintf("%d,%d", m, n)
 	if val, ok := memo[memoKey]; ok {
         return val
@@ -99,13 +104,13 @@ func gridTraveler(m, n int, memo map[string]int) int {
 // Note than if a single element matches target sum it still rturns true
 // Steps
 // Get base cases
-// tareget - val in recursive
+// target - val in recursive
 // return the main fucn when a rcursive returns true as for this problem, we dont have to check each possbile recursive call deep down
 func canSum(targetSum int, values []int, memo map[int]bool) bool {
 	if v, ok := memo[targetSum]; ok {
 		return v
 	}
-	if targetSum == 0 {
+	if targetSum == 0 {  // Even if the very first target itself is 0, its OK to return true
 		return true
 	}
 	if targetSum < 0 {
@@ -113,26 +118,27 @@ func canSum(targetSum int, values []int, memo map[int]bool) bool {
 	}
 	for _, v := range values {
 		reminder := targetSum - v
-		if canSum(reminder, values, memo) {
-			memo[targetSum] = true	
-			return true
-		}
+		if canSum(reminder, values, memo) {	// As soon as i find true, or target sum reaches 0 in any call at all, I'm returning true early
+			return true                // So the only time I need memoization at a false only scenario. 
+		}							// We can mark that wehn taget some is changed to sepcific values, that whole recursion tree will return false
 
 	}
-	memo[targetSum] = false
-	return false
+	memo[targetSum] = false // When a recursion function, finds the remaining targetsum's (mostly this will be ome middle level target) recursive tree returns false, memoize it
+	return false // Then return false to the caller
 }
 
 func main() {
 	// memo := make([]int, 7)
-	// fmt.Println(fib(6, memo))
+	// fmt.Println(fib(6, memo ))
 	// fmt.Println(fibBottomUp(3))
 
 	// memo := make(map[string]int)
 	// fmt.Println(gridTraveler(3, 3, memo))
 
-	// memo := make(map[int]bool)
-	// fmt.Println(canSum(3, []int{2,5}, memo))
+	memo := make(map[int]bool)
+	fmt.Println(canSum(300, []int{7,14}, memo))
+	fmt.Println(print(300, []int{7,14}, memo))
+
 
 
 }
