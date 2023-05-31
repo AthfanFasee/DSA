@@ -131,23 +131,6 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 }
 
 // Find count of connected components in graph
-func print(graph graph) int {
-	count := 0
-	visitedSet := make(map[string]bool)
-	queue := []string{}
-
-	for key, edge := range graph {
-		queue = append(queue, key)
-		if visitedSet[key] != true {
-			for len(queue) > 1 {
-				current := queue[0]
-				queue = queue[1:]
-
-			}
-		}
-	}
-}
-
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
