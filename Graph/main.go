@@ -33,6 +33,19 @@ func depthFirst(graph map[string][]string, source string) {
 	}
 }
 
+func depthFirstRecursive(graph map[string][]string, source string) {
+	// A base case like this is not needed here, bcs loop on a nil map is valid, and it will automatically not call my recursive function at that scenario
+	// if graph[source] == nil {
+	// 	return
+	// }
+
+	fmt.Println(source)
+
+	for _, value := range graph[source] {
+		depthFirstRecursive(graph, value)
+	}
+}
+
 // Print graph in breadth-first order
 func breadthFisrt(graph map[string][]string, source string) {
 	queue := []string{source}
@@ -89,7 +102,7 @@ func undirectedPathHasPath(edges [][]string, src string, dst string) bool {
 	// Build graph () from given edges (Adjacency list using the edges given)
 	graph := make(graph)
 	for _, edge := range edges {
-		graph[edge[0]] = append(graph[edge[0]], edge[1]) // If edge[0] is not a key in graph, it will create it
+		graph[edge[0]] = append(graph[edge[0]], edge[1]) // If edge[0] is not a key in graph, it will create it.
 		graph[edge[1]] = append(graph[edge[1]], edge[0])
 	}
 
@@ -118,6 +131,23 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 }
 
 // Find count of connected components in graph
+func print(graph graph) int {
+	count := 0
+	visitedSet := make(map[string]bool)
+	queue := []string{}
+
+	for key, edge := range graph {
+		queue = append(queue, key)
+		if visitedSet[key] != true {
+			for len(queue) > 1 {
+				current := queue[0]
+				queue = queue[1:]
+
+			}
+		}
+	}
+}
+
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -203,7 +233,7 @@ func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 		for _, v := range graph[current] {
 			if vistedSet[v] {
 				vistedSet[v] = true
-				queue = append(queue, []interface{}{v, distance+1})
+				queue = append(queue, []interface{}{v, distance + 1})
 			}
 		}
 	}
@@ -215,10 +245,10 @@ func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 func islandCount(grid [][]string) int {
 	count := 0
 
-	for r , row := range grid {
+	for r, row := range grid {
 		for c := range row {
 			if exploreGrid(grid, r, c) {
-				count ++
+				count++
 			}
 		}
 	}
@@ -299,16 +329,15 @@ func main() {
 	// 	"f": {},
 	// }
 
-
 	// Undirected Graph's edges
-	
-	// edges := [][]string{
-	// 	{"i", "j"},
-	// 	{"k", "i"},
-	// 	{"m", "k"},
-	// 	{"k", "l"},
-	// 	{"o", "n"},
-	// }
+
+	edges := [][]string{
+		{"i", "j"},
+		{"k", "i"},
+		{"m", "k"},
+		{"k", "l"},
+		{"o", "n"},
+	}
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
@@ -321,28 +350,30 @@ func main() {
 	// 	"o": {"n"},
 	// 	"n": {"o"},
 	// }
-	
-	grid := [][]string{
-		{"W", "L", "W", "W", "W"},
-		{"W", "L", "W", "W", "W"},
-		{"W", "W", "W", "L", "W"},
-		{"W", "W", "L", "L", "W"},
-		{"L", "W", "W", "L", "L"},
-		{"L", "L", "W", "W", "W"},
-	}
+
+	// grid := [][]string{
+	// 	{"W", "L", "W", "W", "W"},
+	// 	{"W", "L", "W", "W", "W"},
+	// 	{"W", "W", "W", "L", "W"},
+	// 	{"W", "W", "L", "L", "W"},
+	// 	{"L", "W", "W", "L", "L"},
+	// 	{"L", "L", "W", "W", "W"},
+	// }
 
 	// depthFirst(graph, "a")
+	// depthFirstRecursive(graph, "a")
 	// breadthFisrt(graph, "a")
+	// print(graph, "a")
+
 	// fmt.Println(hasPath(graph, "a", "f"))
 	// fmt.Println(hasPathRecsursive(graph, "a", "f"))
 
-
-	// fmt.Println(undirectedPathHasPath(edges, "i", "o"))
+	fmt.Println(undirectedPathHasPath(edges, "i", "o"))
 
 	// fmt.Println(connectedComponentCount(graph))
 	// fmt.Println(largestComponent(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
-	fmt.Println(smallIslandSize(grid))
-	
+	// fmt.Println(smallIslandSize(grid))
+
 }

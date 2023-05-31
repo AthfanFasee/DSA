@@ -237,18 +237,21 @@ func allConstruct(target string, wordBank []string, memo map[string][][]string) 
 	if value, ok := memo[target]; ok {
 		return value
 	}
+	//{{}}: This creates an empty slice of strings []string{} and encloses it within another set of curly braces.
+	// The double curly braces {{}} indicate that we are creating a slice with a single element,
+	// and that element is itself an empty slice of strings
 	if target == "" {
-		return [][]string{{}}
+		return [][]string{{}} // [[]]
 	}
 
-	var result [][]string
+	var result [][]string // This will just return an empty slice // []
 
 	for _, word := range wordBank {
-		if strings.Index(target, word) == 0 {
+		if strings.HasPrefix(target, word) {
 			suffix := target[len(word):]
 			suffixWays := allConstruct(suffix, wordBank, memo)
 			for _, way := range suffixWays {
-				targetWays := append([]string{word}, way...)
+				targetWays := append([]string{word}, way...) // Same as saying in way array append the word variable's value. But doing like this makes sure we add the word to the front, which gives us nice order
 				result = append(result, targetWays)
 			}
 		}
@@ -270,7 +273,7 @@ func main() {
 	// memo := make(map[int][]int)
 	// memo := make(map[string]bool)
 	// memo := make(map[string]int)
-	memo := make(map[string][][]string)
+	// memo := make(map[string][][]string)
 	// fmt.Println(canSum(300, []int{7,14}, memo))
 	// fmt.Println(howSum(14, []int{7,14}, memo))
 	// fmt.Println(bestSum(70, []int{7, 14}, memo))
@@ -279,6 +282,6 @@ func main() {
 	// fmt.Println(countConstract("abcdef", []string{"ab", "abc", "cd", "def", "abcd"}, memo))
 	// fmt.Println(countConstract("purple", []string{"purp", "p", "ur", "le", "purpl"}, memo))
 	// fmt.Println(countConstract("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed=", []string{"eee", "e", "ee", "eee", "eee"}, memo))
-	fmt.Println(allConstruct("purple", []string{"purp", "p", "ur", "le", "purpl"}, memo))
-	fmt.Println(allConstruct("aaaaaaaaaaaaaaazs", []string{"a", "aa", "aaa", "a", "aaaaa"}, memo))
+	// fmt.Println(allConstruct("purple", []string{"purp", "p", "ur", "le", "purpl"}, memo))
+	// fmt.Println(allConstruct("aaaaaaaaaaaaaaazs", []string{"a", "aa", "aaa", "a", "aaaaa"}, memo))
 }
