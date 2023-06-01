@@ -131,31 +131,6 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 }
 
 // Find count of connected components in graph
-func print(graph map[int][]int) int {
-	count := 0
-	visibleSet := make(map[int]bool)
-
-	for node := range graph {
-		if helper(graph, node, visibleSet) {
-			count += 1
-		}
-	}
-
-	return count
-
-}
-func helper(graph map[int][]int, current int, visibleSet map[int]bool) bool {
-	if _, ok := visibleSet[current]; ok {
-		return false
-	}
-	visibleSet[current] = true
-
-	for _, node := range graph[current] {
-		helper(graph, node, visibleSet)
-	}
-
-	return true
-}
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -209,7 +184,8 @@ func exploreWithCount(graph graph, node string, visitedSet map[string]bool) int 
 	size := 1
 
 	for _, v := range graph[node] {
-		size += exploreWithCount(graph, v, visitedSet)
+		size += exploreWithCount(graph, v, visitedSet) // We shouldn't return here. Bcs in scenarios where this function is meant to explore the whole thing and find something (in here total count of nodes)
+		// We shouldn,t be returning in middle. Dont consider the return will wait for recursion to end. For some reason it's messed up. But returning at last is fine
 	}
 
 	return size
@@ -239,7 +215,7 @@ func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 		queue = queue[1:]
 
 		for _, v := range graph[current] {
-			if vistedSet[v] {
+			if vistedSet[v] == false {
 				vistedSet[v] = true
 				queue = append(queue, []interface{}{v, distance + 1})
 			}
@@ -278,11 +254,13 @@ func exploreGrid(grid [][]string, r, c int) bool {
 	// Instead of using visitedSet, you can simply change the original value to W as it's not needed after the above check
 	grid[r][c] = "W"
 
+	// According to the logic in islandCount and our basecase, only when a land comes, i'll start exploring using these recursives
 	exploreGrid(grid, r-1, c)
 	exploreGrid(grid, r+1, c)
 	exploreGrid(grid, r, c+1)
 	exploreGrid(grid, r, c-1)
 
+	// So i can return true after a land is explored
 	return true
 }
 
@@ -336,26 +314,26 @@ func main() {
 	// 	"e": {},
 	// 	"f": {},
 	// }
-	graph := map[int][]int{
-		3: {},
-		4: {6},
-		6: {4, 5, 7, 8},
-		8: {6},
-		7: {6},
-		5: {6},
-		1: {2},
-		2: {1},
-	}
+	// graph := map[int][]int{
+	// 	3: {},
+	// 	4: {6},
+	// 	6: {4, 5, 7, 8},
+	// 	8: {6},
+	// 	7: {6},
+	// 	5: {6},
+	// 	1: {2},
+	// 	2: {1},
+	// }
 
 	// Undirected Graph's edges
 
-	// edges := [][]string{
-	// 	{"i", "j"},
-	// 	{"k", "i"},
-	// 	{"m", "k"},
-	// 	{"k", "l"},
-	// 	{"o", "n"},
-	// }
+	edges := [][]string{
+		{"i", "j"},
+		{"k", "i"},
+		{"m", "k"},
+		{"k", "l"},
+		{"o", "n"},
+	}
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
@@ -389,7 +367,7 @@ func main() {
 	// fmt.Println(undirectedPathHasPath(edges, "i", "o"))
 
 	// fmt.Println(connectedComponentCount(graph))
-	fmt.Println(print(graph))
+	fmt.Println(funcshortestPath(edges, "i", "o"))
 	// fmt.Println(largestComponent(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
