@@ -131,6 +131,31 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 }
 
 // Find count of connected components in graph
+func print(graph map[int][]int) int {
+	count := 0
+	visibleSet := make(map[int]bool)
+
+	for node := range graph {
+		if helper(graph, node, visibleSet) {
+			count += 1
+		}
+	}
+
+	return count
+
+}
+func helper(graph map[int][]int, current int, visibleSet map[int]bool) bool {
+	if _, ok := visibleSet[current]; ok {
+		return false
+	}
+	visibleSet[current] = true
+
+	for _, node := range graph[current] {
+		helper(graph, node, visibleSet)
+	}
+
+	return true
+}
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -311,16 +336,26 @@ func main() {
 	// 	"e": {},
 	// 	"f": {},
 	// }
+	graph := map[int][]int{
+		3: {},
+		4: {6},
+		6: {4, 5, 7, 8},
+		8: {6},
+		7: {6},
+		5: {6},
+		1: {2},
+		2: {1},
+	}
 
 	// Undirected Graph's edges
 
-	edges := [][]string{
-		{"i", "j"},
-		{"k", "i"},
-		{"m", "k"},
-		{"k", "l"},
-		{"o", "n"},
-	}
+	// edges := [][]string{
+	// 	{"i", "j"},
+	// 	{"k", "i"},
+	// 	{"m", "k"},
+	// 	{"k", "l"},
+	// 	{"o", "n"},
+	// }
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
@@ -351,9 +386,10 @@ func main() {
 	// fmt.Println(hasPath(graph, "a", "f"))
 	// fmt.Println(hasPathRecsursive(graph, "a", "f"))
 
-	fmt.Println(undirectedPathHasPath(edges, "i", "o"))
+	// fmt.Println(undirectedPathHasPath(edges, "i", "o"))
 
 	// fmt.Println(connectedComponentCount(graph))
+	fmt.Println(print(graph))
 	// fmt.Println(largestComponent(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
