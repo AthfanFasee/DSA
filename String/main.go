@@ -183,21 +183,19 @@ func max(a, b int) int {
 // You can perform this operation at most k times.
 // Return the length of the longest substring containing the same letter you can get after performing the above operations
 func characterReplacement(s string, k int) int {
-	count := make([]int, 128) // 128 bytes to represent 128 ASCII characters.
-	res := 0
-	maxf := 0
-	left := 0
+	count := make(map[byte]int)
+	res, maxf, left := 0, 0, 0
 
 	// bbaaa  k = 1
 	for right := 0; right < len(s); right++ {
-		count[s[right]] += 1 // s[end] will return a byte, which is the same as that element in the count array
+		count[s[right]] += 1 // s[right] will return a byte
 
 		maxf = max(maxf, count[s[right]])
 
 		// Move left pointer
 		if (right-left+1)-maxf > k { // Current winow - maximum appeared charcter should be less than k for this to be valid. So if it's bigger move left pointer
 			count[s[left]] -= 1 // When we decrement, we dont have to update max variable as reducing max variable wont have any effect on end result.
-			left += 1           // Bcs at the end we want the ,aximum length, so we dont care if maxf reduces
+			left += 1           // Bcs at the end we want the ,maximum length, so we dont care if maxf reduces
 		}
 
 		res = max(res, right-left+1)
