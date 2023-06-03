@@ -10,20 +10,20 @@ import (
 // You may assume that each input would have exactly one solution, and you may not use the same element twice.
 // You can return the answer in any order.
 func twoSum(nums []int, target int) []int {
-    indexMap := make(map[int]int)
+	hashmap := make(map[int]int)
 	// loop through array
-    for cIndex, cValue := range nums {
+	for nIndex, nValue := range nums {
 		// Find needed value
-        neededValue := target - cValue
+		neededValue := target - nValue
 		// Check if it exists in hashmap yes means return it's index with currentArrayelement Index
-		
-        if targetIndex, ok := indexMap[neededValue]; ok {
-            return []int{targetIndex, cIndex}
-        }
-        // No means add curentValue as key and index as value to hashmap
-        indexMap[cValue] = cIndex
-    }
-    return []int{}
+
+		if targetIndex, ok := hashmap[neededValue]; ok {
+			return []int{targetIndex, nIndex}
+		}
+		// No means add curentValue as key and index as value to hashmap
+		hashmap[nValue] = nIndex
+	}
+	return []int{}
 }
 
 // You are given an array prices where prices[i] is the price of a given stock on the ith day
@@ -39,9 +39,9 @@ func Best(prices []int) int {
 		if price < lowPrice {
 			lowPrice = price
 		}
-		
+
 		// Minus lowprice from each current price and keep trackof maximum difference in a variable
-		if price - lowPrice > maxSale {
+		if price-lowPrice > maxSale {
 			maxSale = price - lowPrice
 		}
 	}
@@ -52,21 +52,21 @@ func Best(prices []int) int {
 
 // Given an integer array nums, find the subarray which has the largest sum and return its sum
 func subArray(nums []int) int {
-	max, sum := nums[0], nums[0]
+	maxSum, curSum := nums[0], nums[0]
 
-	for _, v := range nums[1:] {  // Instead of trying to start from second index, just loop through array[:1]
-		if sum >= 0 {
-			sum += v // If sum is greater than or equal to 0 just add the current element to it too (as this new array which we find the sum for should be condigious, we won't miss anything by doing this)
+	for _, v := range nums[1:] { // Instead of trying to start from second index, just loop through array[1:]
+		if curSum >= 0 {
+			curSum += v // If sum is greater than or equal to 0 just add the current element to it too (as this new array which we find the sum for should be condigious, we won't miss anything by doing this)
 		} else {
-			sum = v // If the sum before this is less than zero, replace it with current element. As the negative sum won't help at all in finding maxsum
+			curSum = v // If the sum before this is lesst han zero, replace it with current element. As the negative sum won't help at all in finding maxsum
 		}
 
-		if max < sum { // For an example if [5,4,-8,1,2]. When -8 comes and reduces sum to 1, the max won't be replaces. It will be holding 9 which can be created by subarray [5,4].
-			max = sum // So at the end we can return the max sum we ever got at any point of time
+		if maxSum < curSum { // For an example if [5,4,-8,1,2]. When -8 comes and reduces sum to 1, the max won't be replaces. It will be holding 9 which can be created by subarray [5,4].
+			maxSum = curSum // So at the end we can return the max sum we ever got at any point of time
 		}
 	}
 
-	return max
+	return maxSum
 }
 
 // Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number
@@ -81,8 +81,8 @@ func twoSumsTwo(nums []int, target int) []int {
 		sum := nums[left] + nums[right]
 
 		if sum == target {
-			return []int{left+1, right+1} // Add 1 bcs the array actually start at index 1 (question specific)
-		} else if sum > target {  // If we surpass target, to reduce sum amount we should move right pointer towards left as array is sorted
+			return []int{left + 1, right + 1} // Add 1 bcs the array actually start at index 1 (question specific)
+		} else if sum > target { // If we surpass target, to reduce sum amount we should move right pointer towards left as array is sorted
 			right--
 		} else {
 			left++
@@ -92,8 +92,8 @@ func twoSumsTwo(nums []int, target int) []int {
 	return []int{} // Assuming we have exactly one solution, the answere will be returned alrdy. This line is just to satisfy compiler
 }
 
-// Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] 
-// such that i != j, i != k, 
+// Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]]
+// such that i != j, i != k,
 // and j != k, and nums[i] + nums[j] + nums[k] == 0
 func threeSum(nums []int) [][]int {
 	var res [][]int
@@ -101,11 +101,12 @@ func threeSum(nums []int) [][]int {
 	// Sort the array to use two pointers
 	sort.Ints(nums)
 
-	for i := 0; i < len(nums)-2; i++ {
-		if i > 0 && nums[i] == nums[i-1] {
-			continue
+	for i := 0; i < len(nums)-2; i++ { // We are gonna always be checking 3 elements in total, hence len(array) - 2
+		if i > 0 && nums[i] == nums[i-1] { // From second iteration check if previous element is same as current, then skip as result cant contain duplicate
+			continue // When continue is encountered in a loop, the remaining statements in the loop body are skipped, and the loop proceeds with the next iteration
 		}
 
+		// Now starts our 2 sum two
 		left, right := i+1, len(nums)-1
 
 		for left < right {
@@ -116,11 +117,11 @@ func threeSum(nums []int) [][]int {
 				left, right = left+1, right-1
 
 				for left < right && nums[left] == nums[left-1] {
-					left++
+					left++ // Skip duplicate once again (2th element on result)
 				}
 
 				for left < right && nums[right] == nums[right+1] {
-					right--
+					right-- // Skip duplicate once again (3rd element on result)
 				}
 			} else if target > 0 {
 				right--
@@ -134,7 +135,7 @@ func threeSum(nums []int) [][]int {
 }
 
 func main() {
-	nums := []int{-1,0,1,2,-1,-4}
+	nums := []int{-1, 0, 1, 2, -1, -4}
 	// fmt.Println(twoSum(nums, 17))
 	// fmt.Println(Best(nums))
 	// fmt.Println(subArray(nums))
