@@ -81,3 +81,17 @@ func reverseBitsSecondWay(n uint32) uint32 {
 	}
 	return res
 }
+
+// Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i
+// DP Offset O(N) |O(N)
+func countBits(n int) []int {
+	res := make([]int, n+1)
+	offset := 1
+	for i := 1; i <= n; i++ {
+		if offset*2 == i {
+			offset = i
+		}
+		res[i] = 1 + res[i-offset]
+	}
+	return res
+}
