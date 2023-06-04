@@ -11,6 +11,13 @@ package main
 // the result will always be an integer value obtained by dividing num by 2 and rounding down the result.
 // In the case of the binary representation 10101, the right-shift operation will produce the decimal value 10, not 10.5, as it discards the remainder during the division
 
+// Left shifting is mulplying by2
+// let's consider the decimal number 5, which has the binary representation 101.
+// If we left-shift 5 by 2 positions (5 << 2), we get 10100, which is the binary representation of the decimal number 20
+
+// LSB means Least Significant Bit (least bit)
+// MSB means Most Significant bit which is the last 1 (after that 1 there could be meaningless 0s)
+
 // Write a function that takes the binary representation of an unsigned integer and returns the number of '1' bits it has (also known as the Hamming weight).
 func HammingWeight(num uint32) int {
 	var res uint32
@@ -29,7 +36,7 @@ func missingNumber(nums []int) int {
 	result := 0
 
 	for i, x := range nums {
-		result ^= x // exclusive Or or XOR operator
+		result ^= x // exclusive Or or XOR operator. Used to add 2 binaryu numbers without considering carry (carry means when 1 + 1, we add 0 then carry 1 to left)
 		result ^= i + 1
 	}
 
@@ -58,10 +65,17 @@ func getSum(a int, b int) int {
 }
 
 // Reverse bits of a given 32 bits unsigned integer.
-func reverseBits(n uint32) uint32 {
-	var res uint32 = 0
+// Find each bit of number if each bit is 0 or 1 by (n & 1). This will give 1 if bit is 1 or will give 0
+// Now that we have answer to add it to result (which alrdy got 32 0s by default), add with an Or operator
+// Or operator is important to make sure we don't wrongly modify other bits of res
+// Left Shift: res is left-shifted by 1. This shifts all the existing bits in res to the left, making room for the next bit.
+// Bitwise OR: The least significant bit of n (obtained using n & 1) is ORed with res. This operation sets the rightmost bit of res to the same value as the current least significant bit of n.
+// Right Shift: n is right-shifted by 1. This discards the least significant bit of n and prepares it for the next iteration.
+func reverseBitsSecondWay(n uint32) uint32 {
+	var res uint32
 	for i := 0; i < 32; i++ {
-		res = res << 1
+		// res is fixed to 32 bits, so on left shift we will lose 0s from 32nd place but they dont mean anything
+		res = res << 1 // Trick is on very first iteration this left shift dooesnt do anything as all res contains is zero but then res is being updated in next line and on 2nd iteration the updated res is moved a bit to the left
 		res = res | (n & 1)
 		n = n >> 1
 	}
