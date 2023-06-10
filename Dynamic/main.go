@@ -261,6 +261,38 @@ func allConstruct(target string, wordBank []string, memo map[string][][]string) 
 	return result
 }
 
+// You are climbing a staircase. It takes n steps to reach the top.
+// Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top
+func climbStairs(n int) int {
+	one, two := 1, 1
+
+	for i := 0; i < n-1; i++ {
+		one, two = one+two, one
+	}
+
+	return one
+}
+
+// 198. House Robber
+func rob(nums []int) int {
+	// [1, 2, 3, 1]
+	rob1, rob2 := 0, 0
+	temp := 0
+	for _, n := range nums {
+		temp = max(n+rob1, rob2)
+		rob1 = rob2
+		rob2 = temp
+	}
+
+	return temp
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
 func main() {
 	// memo := make([]int, 7)
 	// fmt.Println(fib(6, memo ))
