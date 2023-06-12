@@ -275,16 +275,22 @@ func climbStairs(n int) int {
 
 // 198. House Robber
 func rob(nums []int) int {
-	// [1, 2, 3, 1]
+	// [1, 4, 2]
 	rob1, rob2 := 0, 0
-	temp := 0
 	for _, n := range nums {
-		temp = max(n+rob1, rob2)
+		temp := max(n+rob1, rob2)
 		rob1 = rob2
 		rob2 = temp
 	}
 
-	return temp
+	return rob2
+}
+
+func rob2(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	return max(rob(nums[1:]), rob(nums[:len(nums)-1]))
 }
 
 func max(x, y int) int {
