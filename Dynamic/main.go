@@ -278,6 +278,9 @@ func rob(nums []int) int {
 	// [1, 4, 2]
 	rob1, rob2 := 0, 0
 	for _, n := range nums {
+		// This line indicates 2 things at same time (possible bcs we keep changing rob1 and 2 values)
+		// Read this interms of very first decision
+		// Read this like rob 2 means until this, or here the maximum amount we could rob
 		temp := max(n+rob1, rob2)
 		rob1 = rob2
 		rob2 = temp
