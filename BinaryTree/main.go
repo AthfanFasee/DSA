@@ -220,8 +220,8 @@ func MaxValue(int1, int2 int) int {
 }
 
 // Calculate sum of values in all root to leafe paths and return the max value among them
-// First think what will I do if only a single node is given? I'll return it's value. Well that's a basecase
-// Second think of a c node which got only left child. Now when we call line 233, when it's right child which is nill is passed, thats another base case
+// First think what will I do if only a single node is given? I'll return it's value. Well that's a basecase (if root.Left == nil && root.Right == nil)
+// Second think of a c node which got only left child. Now When it's right child which is nill is passed, thats another base case (if root == nil)
 // Then think of a short tree as we covered all other edge cases, like a tree with 3 nodes. I want to see who's bigger in b and c and I want to add the bigger one to myself(a)
 func MaxRootToLeafPathRecursive(root *Node) int {
 	if root == nil {
@@ -353,6 +353,34 @@ func invertTreeRecursive(root *Node) *Node {
 	return root // And all we want to return in the end is root itself which was given to us right.
 }
 
+func lowestCommonAncestor(root, p, q *Node) *Node {
+	cur := root
+
+	for cur != nil {
+		if p.Val > cur.Val && q.Val > cur.Val {
+			cur = cur.Right
+		} else if p.Val < cur.Val && q.Val < cur.Val {
+			cur = cur.Left
+		} else {
+			return cur
+		}
+	}
+
+	return cur
+}
+
+// Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST
+func lowestCommonAncestorRecursive(root, p, q *Node) *Node {
+	if p.Val < root.Val && q.Val < root.Val {
+		return lowestCommonAncestorRecursive(root.Left, p, q)
+	}
+	if p.Val > root.Val && q.Val > root.Val {
+		return lowestCommonAncestorRecursive(root.Right, p, q)
+	}
+
+	return root
+}
+
 func main() {
 	a := Node{Val: 1}
 	b := Node{Val: 2}
@@ -377,7 +405,7 @@ func main() {
 
 	// fmt.Println(depthFirst(&a))
 	// fmt.Println(depthFirstRecursive(&a))
-	// fmt.Println(breadthFirst(&a))
+	fmt.Println(breadthFirst(nil))
 	// fmt.Println(find(&a, &d))
 	// fmt.Println(findRecursive(&a, &o))
 	// fmt.Println(Sum(&a))
@@ -386,6 +414,6 @@ func main() {
 	// fmt.Println(Min(&a))
 	// fmt.Println(MinRecursive(&a))
 	// fmt.Println(MaxRootToLeafPathRecursive(&a))
-	fmt.Println(MaxDepth(&a))
+	// fmt.Println(MaxDepth(&a))
 
 }
