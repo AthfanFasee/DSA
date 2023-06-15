@@ -153,6 +153,44 @@ func ProductofArrayExceptSelf(nums []int) []int {
 	return res
 }
 
+// Given an integer array nums, find a subarray that has the largest product, and return the product.
+func maxProduct(nums []int) int {
+	min, max, res := 1, 1, nums[0] // 1 <= nums.length <= 2 * 10^4
+	for _, n := range nums {
+		min, max = Min(n, Min(min*n, max*n)), Max(n, Max(min*n, max*n))
+		res = Max(res, max)
+	}
+	return res
+}
+
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// Incase Max or Min had to take multiple arguments
+// Call is like this `var cur_min = minOf(num, prev_min * num, prev_max * num)`
+func minOf(vars ...int) int {
+	min := vars[0]
+
+	for _, val := range vars {
+		if val < min {
+			min = val
+		}
+	}
+
+	return min
+}
+
 func main() {
 	nums := []int{-1, 0, 1, 2, -1, -4}
 	// fmt.Println(twoSum(nums, 17))

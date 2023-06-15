@@ -27,7 +27,7 @@ func (s stack) Pop() (stack, *Node) { // in here stack is a type itself right? o
 // Depth first traversel (move deeper into tree before u go vertically). For an ex: always go to d or e from b rather than c at first
 // Normally a stack is used to solve thse problems
 
-// Should return an array containing values of the tree in depth-first order 
+// Should return an array containing values of the tree in depth-first order
 func depthFirst(root *Node) []int { // Normal way
 	values := []int{}
 
@@ -53,7 +53,7 @@ func depthFirst(root *Node) []int { // Normal way
 	return values
 }
 
-func depthFirstRecursive(root *Node) []int {   // Recursive way
+func depthFirstRecursive(root *Node) []int { // Recursive way
 	if root == nil {
 		return []int{}
 	}
@@ -64,7 +64,7 @@ func depthFirstRecursive(root *Node) []int {   // Recursive way
 	result := []int{root.Val}
 	result = append(result, left...)
 	result = append(result, right...)
-	
+
 	return result
 }
 
@@ -243,21 +243,38 @@ func MaxDepth(root *Node) int {
 	return 1 + MaxValue(MaxDepth(root.Left), MaxDepth(root.Right))
 }
 
+// Given the root of a binary tree, return its maximum depth.(104)
+// A binary tree's maximum depth is the number of nodes (not number of paths) along the longest path from the root node down to the farthest leaf node
+func maxDepth(root *Node) int {
+	if root == nil {
+		return 0
+	}
+
+	return 1 + Max(maxDepth(root.Left), maxDepth(root.Right))
+}
+
+func Max(n1, n2 int) int {
+	if n1 > n2 {
+		return n1
+	}
+	return n2
+}
+
 // Find if both trees match
-func SameTree(root1, root2 *Node) bool { 
-	if root1 == nil && root2 == nil {  // this base case comes for nil children of leaf, or empty tree
+func SameTree(root1, root2 *Node) bool {
+	if root1 == nil && root2 == nil { // this base case comes for nil children of leaf, or empty tree
 		return true
 	}
-	if root1 == nil || root2 == nil {  // Think of a base case when one root is nil
+	if root1 == nil || root2 == nil { // Think of a base case when one root is nil
 		return false
 	}
 	// Instead of both if statments above, we can also write this smart code
 
 	// if root1 == nil || root2 == nil {  // When any of them is nil, just compare both
-    //     return root1 == root2		// If incase both  r nil comparing them will return true
-    // }								// If incase only one is nil, comparing them will return false
+	//     return root1 == root2		// If incase both  r nil comparing them will return true
+	// }								// If incase only one is nil, comparing them will return false
 
-	if root1.Val != root2.Val {  // when both aren't nil, compare values
+	if root1.Val != root2.Val { // when both aren't nil, compare values
 		return false
 	}
 
@@ -267,60 +284,60 @@ func SameTree(root1, root2 *Node) bool {
 // Given the roots of two binary trees root and subRoot, return true if there is a subtree of root with the same structure and node values of subRoot
 // Leetcode 572, consider root and subroot aren't nill
 func SubTree(root, subRoot *Node) bool {
-	// These 2 checks r important if nodes can be nill 
+	// These 2 checks r important if nodes can be nill
 
-    // if subRoot == nil {
-    //     return true
-    // }
-    // if root == nil {
-    //     return false
-    // }
+	// if subRoot == nil {
+	//     return true
+	// }
+	// if root == nil {
+	//     return false
+	// }
 
 	queue := []*Node{root}
 
-    for len(queue) > 0 {
-        current := queue[0]
-        queue = queue[1:]
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
 
-        if current.Val == subRoot.Val {
-            if SameTree(current, subRoot) {
+		if current.Val == subRoot.Val {
+			if SameTree(current, subRoot) {
 				return true
 			}
-        }
+		}
 
-        if current.Left != nil {
-            queue = append(queue, current.Left)
-        }
-        if current.Right != nil {
-            queue = append(queue, current.Right)
-        }
-    }
+		if current.Left != nil {
+			queue = append(queue, current.Left)
+		}
+		if current.Right != nil {
+			queue = append(queue, current.Right)
+		}
+	}
 
-    return false
+	return false
 }
 
 // Gven the root of a binary tree, invert the tree, and return its root (226)
 func invertTree(root *Node) *Node {
-    if root == nil {
-        return root
-    }
-    queue := []*Node{root}
+	if root == nil {
+		return root
+	}
+	queue := []*Node{root}
 
-    for len(queue) > 0 {
-        current := queue[0]
-        queue = queue[1:]
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
 
-        current.Right, current.Left = current.Left, current.Right
+		current.Right, current.Left = current.Left, current.Right
 
-        if current.Right != nil {
-            queue = append(queue, current.Right)
-        }
-        if current.Left != nil {
-            queue = append(queue, current.Left)
-        }
-    }
+		if current.Right != nil {
+			queue = append(queue, current.Right)
+		}
+		if current.Left != nil {
+			queue = append(queue, current.Left)
+		}
+	}
 
-    return root
+	return root
 }
 
 func invertTreeRecursive(root *Node) *Node {
@@ -330,10 +347,10 @@ func invertTreeRecursive(root *Node) *Node {
 
 	root.Left, root.Right = root.Right, root.Left
 
-	invertTreeRecursive(root.Left) // In here when a null node of maybe let's say "C" comes, it will return root on the first check
+	invertTreeRecursive(root.Left)  // In here when a null node of maybe let's say "C" comes, it will return root on the first check
 	invertTreeRecursive(root.Right) // the only confusing part is I'm not doing anything with the nil (root) it returns, unlike other functions
-									// Bcs we only want to do the swapping in this problem
-	return root						// And all we want to return in the end is root itself which was given to us right.
+	// Bcs we only want to do the swapping in this problem
+	return root // And all we want to return in the end is root itself which was given to us right.
 }
 
 func main() {
