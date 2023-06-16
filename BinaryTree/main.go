@@ -353,23 +353,26 @@ func invertTreeRecursive(root *Node) *Node {
 	return root // And all we want to return in the end is root itself which was given to us right.
 }
 
+// Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST
+// All Node.val are unique
+// p and q will exist in the BST.
+// p != q
+// A binary search tree is a type of binary tree that follows a specific property:
+// for every node, all values in its left subtree are smaller than its value, and
+// all values in its right subtree are greater than its value.
 func lowestCommonAncestor(root, p, q *Node) *Node {
-	cur := root
-
-	for cur != nil {
-		if p.Val > cur.Val && q.Val > cur.Val {
-			cur = cur.Right
-		} else if p.Val < cur.Val && q.Val < cur.Val {
-			cur = cur.Left
+	for root != nil {
+		if p.Val > root.Val && q.Val > root.Val {
+			root = root.Right
+		} else if p.Val < root.Val && q.Val < root.Val {
+			root = root.Left
 		} else {
-			return cur
+			return root
 		}
 	}
-
-	return cur
+	return root
 }
 
-// Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST
 func lowestCommonAncestorRecursive(root, p, q *Node) *Node {
 	if p.Val < root.Val && q.Val < root.Val {
 		return lowestCommonAncestorRecursive(root.Left, p, q)
@@ -379,6 +382,112 @@ func lowestCommonAncestorRecursive(root, p, q *Node) *Node {
 	}
 
 	return root
+}
+
+// Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+func levelOrder(root *Node) [][]int {
+	if root == nil {
+		return [][]int{}
+	}
+
+	queue := []*Node{root}
+
+	result := [][]int{}
+
+	for len(queue) > 0 {
+		len := len(queue)
+		levelNodes := []int{} // The idea is to figure out when to make this levelNodes empty again
+
+		for i := 0; i < len; i++ {
+			curr := queue[0]
+			queue = queue[1:]
+
+			levelNodes = append(levelNodes, curr.Val)
+
+			// The question is asking for left to right. So left should be append to queue first
+			if curr.Left != nil {
+				queue = append(queue, curr.Left)
+			}
+			if curr.Right != nil {
+				queue = append(queue, curr.Right)
+			}
+		}
+
+		result = append(result, levelNodes)
+	}
+
+	return result
+}
+
+// Binary Tree Maximum Path Sum (Leetcode 124)
+func maxPathSum(root *Node) int {
+	globalMax := math.MinInt
+	dfs(root, &globalMax)
+	return globalMax
+}
+
+func dfs(root *Node, globalMax *int) int {
+	if root == nil {
+		return 0
+	}
+
+	pathSumFromLeft := max(dfs(root.Left, globalMax), 0)
+	pathSumFromRight := max(dfs(root.Right, globalMax), 0)
+
+	*globalMax = max(*globalMax, root.Val+pathSumFromLeft+pathSumFromRight)
+
+	return root.Val + max(pathSumFromLeft, pathSumFromRight)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
+}
+
+// 129. Sum Root to Leaf Numbers
+// You are given the root of a binary tree containing digits from 0 to 9 only.
+func sumNumbers(root *Node) int {
+	return sumNodes(root, 0)
+}
+
+func sumNodes(node *Node, num int) int {
+	if node == nil {
+		return 0
+	}
+
+	num = num*10 + node.Val
+
+	if node.Left == nil && node.Right == nil {
+		return num
+	}
+
+	return sumNodes(node.Left, num) + sumNodes(node.Right, num)
+}
+
+// 105. Construct Binary Tree from Preorder and Inorder Traversal
+func buildTree(preorder []int, inorder []int) *Node {
+	if len(preorder) == 0 {
+		return nil
+	}
+
+	idx := indexOf(inorder, preorder[0])
+	return &Node{
+		Val:   preorder[0],
+		Left:  buildTree(preorder[1:idx+1], inorder[:idx]),
+		Right: buildTree(preorder[idx+1:], inorder[idx+1:]),
+	}
+}
+
+func indexOf(nums []int, target int) int {
+	for i, num := range nums {
+		if num == target {
+			return i
+		}
+	}
+	return -1
 }
 
 func main() {
