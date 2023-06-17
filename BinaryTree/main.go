@@ -472,7 +472,7 @@ func buildTree(preorder []int, inorder []int) *Node {
 	if len(preorder) == 0 {
 		return nil
 	}
-
+	//preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
 	idx := indexOf(inorder, preorder[0])
 	return &Node{
 		Val:   preorder[0],
