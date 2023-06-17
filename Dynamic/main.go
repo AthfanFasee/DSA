@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -303,6 +304,65 @@ func max(x, y int) int {
 		return x
 	}
 	return y
+}
+
+// 322. Coin Change
+func coinChange(coins []int, amount int) int {
+	dp := make([]int, amount+1)
+	for i := 1; i <= amount; i++ {
+		dp[i] = math.MaxInt32
+	}
+
+	for a := 1; a <= amount; a++ {
+		for _, c := range coins {
+			if a-c >= 0 {
+				dp[a] = Min(dp[a], 1+dp[a-c])
+			}
+		}
+	}
+
+	if dp[amount] != math.MaxInt32 {
+		return dp[amount]
+	}
+	return -1
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// CoinChangetwo 518
+// For c = 1:
+// When a = 1, count[1] += count[1-1] implies count[1] += count[0], which adds 1 to count[1]. currently, count[1] = 1
+// When a = 2, count[2] += count[2-1] implies count[2] += count[1], which adds 1 to count[2]. currently, count[2] = 1
+// When a = 3, count[3] += count[3-1] implies count[3] += count[2], which adds 1 to count[3]. currently, count[3] = 1
+// When a = 4, count[4] += count[4-1] implies count[4] += count[3], which adds 2 to count[4]. currently, count[4] = 1
+// When a = 5, count[5] += count[5-1] implies count[5] += count[4], which adds 3 to count[5]. currently, count[5] = 1
+
+// For c = 2:
+// When a = 2, count[2] += count[2-2] implies count[2] += count[0], which adds 1 to count[2]. currently, count[2] = 2
+// When a = 3, count[3] += count[3-2] implies count[3] += count[1], which adds 1 to count[3]. currently, count[3] = 2
+// When a = 4, count[4] += count[4-2] implies count[4] += count[2], which adds 2 to count[4]. currently, count[4] = 3
+// When a = 5, count[5] += count[5-2] implies count[5] += count[3], which adds 2 to count[5]. currently, count[5] = 3
+
+// For c = 5:
+// When a = 5, count[5] += count[5-5] implies count[5] += count[0], which adds 1 to count[5]. currently, count[5] = 4
+
+func CoinChangeTwo(amount int, coins []int) int {
+	count := make([]int, amount+1)
+	count[0] = 1 // This is because if we don't use any coins, we have exactly one way to form the amount 0.
+
+	// [1, 2, 5] // 5    // [1, 1]
+	for _, c := range coins {
+		for a := c; a <= amount; a++ {
+			count[a] += count[a-c]
+		}
+	}
+
+	return count[amount]
 }
 func main() {
 	// memo := make([]int, 7)
