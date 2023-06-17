@@ -357,7 +357,7 @@ func CoinChangeTwo(amount int, coins []int) int {
 
 	// [1, 2, 5] // 5    // [1, 1]
 	for _, c := range coins {
-		for a := c; a <= amount; a++ {
+		for a := c; a <= amount; a++ { // When we start a from equal to c, we never get any - values. Which we put 0s to in grid. We dont actually need them right
 			count[a] += count[a-c]
 		}
 	}

@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// 242
 // Given two strings s and t, return true if t is an anagram of s, and false otherwise.
 // An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 // Basically they both gotta have exacly same characters, same amount
@@ -199,6 +200,54 @@ func characterReplacement(s string, k int) int {
 		}
 
 		res = max(res, right-left+1)
+	}
+
+	return res
+}
+
+// Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+// 49
+type CharCount [26]int
+
+func groupAnagrams(strs []string) [][]string {
+	hash := make(map[CharCount][]string)
+
+	for _, word := range strs {
+		charCount := CharCount{}
+		for _, r := range word {
+			charCount[r-'a']++
+		}
+
+		hash[charCount] = append(hash[charCount], word)
+	}
+
+	var result [][]string
+	for _, value := range hash {
+		result = append(result, value)
+	}
+
+	return result
+}
+
+// OR
+func groupAnagramsMethod2(strs []string) [][]string {
+	hash := make(map[string][]string)
+
+	for _, word := range strs {
+		countword := make([]int, 26)
+
+		for _, r := range word {
+			countword[r-'a']++
+		}
+		hashkey := fmt.Sprint(countword)
+		hash[hashkey] = append(hash[hashkey], word)
+
+	}
+
+	res := [][]string{}
+
+	for _, values := range hash {
+		res = append(res, values)
 	}
 
 	return res
