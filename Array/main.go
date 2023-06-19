@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 )
 
 // 2 Sum
@@ -189,6 +190,67 @@ func minOf(vars ...int) int {
 	}
 
 	return min
+}
+
+// 128. Longest Consecutive Sequence
+func longestConsecutive(nums []int) int {
+	// Construct a set out of the nums array.
+	numsSet := make(map[int]bool)
+	for _, n := range nums {
+		numsSet[n] = true
+	}
+
+	// The answer is stored here.
+	maxSequenceLen := 0
+
+	// Iterate through the set.
+	for n := range numsSet {
+		// We check if n-1 is in the set. If it is, then n is not the beginning of a sequence
+		// and we go to the next number immediately.
+		if _, ok := numsSet[n-1]; !ok {
+			// Otherwise, we increment n in a loop to see if the next consecutive value is stored in nums.
+			seqLen := 1
+			for {
+				if _, ok = numsSet[n+seqLen]; ok {
+					seqLen++
+					continue
+				}
+				// When the sequence is over, see if we did better than before.
+				maxSequenceLen = Max(seqLen, maxSequenceLen)
+				break
+			}
+		}
+	}
+
+	return maxSequenceLen
+}
+
+// Encode and Decode Strings
+func Encode(stringList []string) string {
+	res := ""
+	// [Neet, Code]
+	for _, s := range stringList {
+		res += strconv.Itoa(len(s)) + "#" + s
+	}
+
+	return res
+}
+
+func Decode(str string) []string {
+	i := 0
+	res := []string{}
+
+	// "4#Neet4#Code"
+	for i < len(str) {
+
+		length, _ := strconv.Atoi(string(str[i]))
+
+		res = append(res, str[i+2:i+2+length])
+
+		i = i + 2 + length
+	}
+
+	return res
 }
 
 func main() {
