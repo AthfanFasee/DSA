@@ -158,13 +158,13 @@ func reverse(head *nodeInt) *nodeInt {
 // if one list ends add all rest of other list to tail.Next
 
 func merge(head1 *nodeInt, head2 *nodeInt) *nodeInt {
-	head := head1 // Keep track of head1 as it's gonna end up being the head of final result and, it's value is being changes later on
+	head := head1        // Keep track of head1 as it's gonna end up being the head of final result and, it's value is being changes later on
 	result := &nodeInt{} // We don't have to worry abt the fact this linkedList starts with an empty struct(with zero values inside as 0 and nil). Doing this won't affect our end result
 	// The reason for creating adummy node like this is bcs incase the lists they give us is empty, we dont need to worry abt edge cases. so just use it
 	counter := 0
 
 	for head1 != nil && head2 != nil {
-		if counter % 2 == 0 {
+		if counter%2 == 0 {
 			result.Next = head1
 			head1 = head1.Next
 		} else {
@@ -240,10 +240,10 @@ func hasCycleSlowFast(head *nodeInt) bool {
 
 	slow, fast := head, head
 
-	for fast == nil || fast.Next == nil { // Just try and loop until end
+	for fast != nil && fast.Next != nil { // Just try and loop until end
 
 		slow = slow.Next      // slow jumps one pointer ahead
-		fast = fast.Next.Next // fast jumps 2 pointer ahead. This is bcs in this way unless there's a cycle these 2 will never meet again and fast will reach to null pretty soon
+		fast = fast.Next.Next // fast jumps 2 pointer ahead. This is bcs in this way unless there's a cycle these 2 will never meet again OR fast will reach to null pretty soon
 
 		if slow == fast { // If there's a cycle they will meet again for sure
 			return true
@@ -308,6 +308,101 @@ func deleteDuplicateSorted(head *nodeInt) *nodeInt {
 	}
 
 	return head
+}
+
+// 143. Reorder List
+func reorderList(head *node) {
+	if head == nil || head.Next == nil {
+		return
+	}
+
+	slow, fast := head, head.Next
+
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	reversed := reverse2(slow.Next)
+	slow.Next = nil
+
+	l1, l2 := head, reversed
+
+	for l1 != nil && l2 != nil {
+		nextL1, nextL2 := l1.Next, l2.Next
+		l1.Next = l2
+		l2.Next = nextL1
+		l1, l2 = nextL1, nextL2
+	}
+}
+
+func reverse2(head *node) *node {
+	var previous *node
+	for head != nil {
+		head.Next, previous, head = previous, head, head.Next
+	}
+
+	return previous
+}
+
+// 19. Remove Nth Node From End of List
+func removeNthFromEnd(head *node, n int) *node {
+	// Create a new instance of the node struct and returns it's pointer
+	dummy := new(node)
+	dummy.Next = head
+	left := dummy
+	right := head
+
+	for n > 0 && right != nil {
+		right = right.Next
+		n--
+	}
+
+	for right != nil {
+		left = left.Next
+		right = right.Next
+	}
+
+	left.Next = left.Next.Next
+	return dummy.Next
+}
+
+// 23. Merge k Sorted Lists
+// You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+// Merge all the linked-lists into one sorted linked-list and return it.
+func mergeKLists(lists []*node) *node {
+	if lists == nil || len(lists) == 0 {
+		return nil
+	}
+
+	for len(lists) > 1 {
+		// pop 2 lists
+		l1 := lists[0]
+		l2 := lists[1]
+		lists = lists[2:]
+
+		merged := mergeTwoLists(l1, l2)
+		lists = append(lists, merged)
+	}
+
+	return lists[0]
+}
+
+func mergeTwoLists(l1, l2 *node) *node {
+	if l1 == nil {
+		return l2
+	}
+	if l2 == nil {
+		return l1
+	}
+
+	if l1.Val < l2.Val {
+		l1.Next = mergeTwoLists(l1.Next, l2)
+		return l1
+	} else {
+		l2.Next = mergeTwoLists(l2.Next, l1)
+		return l2
+	}
 }
 
 func main() {

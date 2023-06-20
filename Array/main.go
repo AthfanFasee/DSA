@@ -32,18 +32,18 @@ func twoSum(nums []int, target int) []int {
 // Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0
 func Best(prices []int) int {
 	// All We need is the difference (maxSale)
-	// Keep track of the lowest value (to minus from every price from array). Start with very first element
-	lowPrice := prices[0]
+	// Keep track of the leftest value (to minus from every price from array). Start with very first element
+	leftPrice := prices[0]
 	maxSale := 0
 	for _, price := range prices {
-		// If any price is found as lower than current lower, update it
-		if price < lowPrice {
-			lowPrice = price
+		// If any price is found as lefter than current lefter, update it
+		if price < leftPrice {
+			leftPrice = price
 		}
 
-		// Minus lowprice from each current price and keep trackof maximum difference in a variable
-		if price-lowPrice > maxSale {
-			maxSale = price - lowPrice
+		// Minus leftprice from each current price and keep trackof maximum difference in a variable
+		if price-leftPrice > maxSale {
+			maxSale = price - leftPrice
 		}
 	}
 
@@ -253,10 +253,181 @@ func Decode(str string) []string {
 	return res
 }
 
+// 153. Find Minimum in Rotated Sorted Array
+func findMin(nums []int) int {
+	left, right := 0, len(nums)-1
+	res := nums[0]
+
+	// If you are confused about how do we decide until left <= right this loop should run
+	// but not until left < right, then you can put like a very base case and see it like this [2,1]
+	// if we only put left < right. For this base case the loop will only run once. And in our first iteration
+	// mid := (left + right) / 2
+	//	res = min(res, nums[mid]) these lines will update res to be nums[0]
+
+	for left <= right {
+		// While looping if the area we choose using pointers ( that sub array) if its somehow
+		// Ends up as sorted properly we can return then. But incase we ever got a lefter res, we still need to check that condition.
+		if nums[left] < nums[right] {
+			res = min(res, nums[left]) // We cant just say res = nums[left]. This will be wrong at situations when only right pointer moves at very first iteration. Use this array as example and see [4, 5, 1, 2, 3]
+			break
+		}
+
+		mid := (left + right) / 2
+		res = min(res, nums[mid])
+		if nums[mid] >= nums[left] {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+
+	return res
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+
+	return b
+}
+
+// 33. Search in Rotated Sorted Array
+func search(nums []int, target int) int {
+	// Find the pivot.
+	left, right := 0, len(nums)-1
+
+	// [4,5,6,7,0,1,2], target = 0
+	// [3,4,0,1,2]
+	for left < right {
+		mid := (left + right) / 2
+		if nums[mid] > nums[right] {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+
+	pivot := left
+
+	// Regular binary search
+	left, right = pivot, pivot-1+len(nums) // 4, 10
+	fmt.Println(left, right)
+	for left <= right {
+		mid := (left + right) / 2
+		midVal := nums[mid%len(nums)]
+
+		if midVal > target {
+			right = mid - 1
+		} else if midVal < target {
+			left = mid + 1
+		} else {
+			// The index mid % n is returned as the result, which accounts for the circular nature of the array and ensures the correct mapping to the original array index
+			return mid % len(nums)
+		}
+	}
+
+	return -1
+}
+
+// Second Method
+func searchTwo(nums []int, target int) int {
+	pivot := findPivot(nums)
+	fmt.Println(pivot)
+	var left int
+	var right int
+
+	// If the pivot index is -1, then the array is sorted properly (either not rotated, or rotated in a way it ended up sorted)
+	// Hence we can search the entire array
+	// [4,5,6,7,0,1,2], target = 0
+	if pivot == -1 {
+		left = 0
+		right = len(nums) - 1
+		// If the target is less than the first element in the array,
+		// then the target must be in the right half of the array
+	} else if target < nums[0] {
+		left = pivot
+		right = len(nums) - 1
+		// If the target is greater than the first element in the array,
+		// then the target must be in the left half of the array
+	} else {
+		left = 0
+		right = pivot - 1
+	}
+
+	// Binary search for the target
+	for left < right {
+		mid := (left + right) / 2
+
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] < target {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+
+	// Check if the target is at the left index
+	if nums[left] == target {
+		return left
+	}
+	return -1
+}
+
+// Find the pivot index if it exists, return -1 otherwise
+// The first step is to find the pivot index, which is the index where the array is rotated
+func findPivot(nums []int) int {
+	// Since all elements in the array are unique,
+	// if the array is rotated, the first element will be greater than the last element.
+	// Hence we can do an early return if the first element is less than the last element.
+	if nums[0] < nums[len(nums)-1] {
+		return -1
+	}
+
+	left := 0
+	right := len(nums) - 1
+
+	for left < right {
+		mid := (left + right) / 2
+
+		// If the element at the mid index is greater than the nums[right],
+		// then the pivot index must be to the right of the mid index
+		if nums[mid] > nums[right] {
+			left = mid + 1
+		} else {
+			right = mid
+		}
+	}
+
+	return left
+}
+
+// 11. Container With Most Water
+func maxArea(heights []int) int {
+	res := 0
+	left, right := 0, len(heights)-1
+
+	for left < right {
+		area := (right - left) * min(heights[left], heights[right])
+		res = Max(res, area)
+
+		if heights[left] < heights[right] {
+			left++
+		} else {
+			right--
+		}
+	}
+
+	return res
+}
+
 func main() {
-	nums := []int{-1, 0, 1, 2, -1, -4}
+	nums := []int{4, 5, 6, 7, 0, 1, 2}
 	// fmt.Println(twoSum(nums, 17))
 	// fmt.Println(Best(nums))
 	// fmt.Println(subArray(nums))
-	fmt.Println(threeSum(nums))
+	// fmt.Println(threeSum(nums))
+	fmt.Println(search(nums, 0))
+	// fmt.Println(searchTwo(nums, 0))
 }
