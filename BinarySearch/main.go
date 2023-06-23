@@ -1,39 +1,51 @@
 package main
 
+import "fmt"
+
 // 34. Find First and Last Position of Element in Sorted Array
+// Run binarcy search twice to find first and last occurence of target
 func searchRange(nums []int, target int) []int {
 	if len(nums) == 0 {
 		return []int{-1, -1}
 	}
 
 	left, right := 0, len(nums)-1
-	for left < right {
+	start := -1
+	for left <= right {
 		mid := left + (right-left)/2
-		if nums[mid] >= target && (mid == len(nums)-1 || nums[mid+1] > target) {
-			right = mid
+
+		if target == nums[mid] {
+			start = mid
+			right = mid - 1
+		} else if target < nums[mid] {
+			right = mid - 1
 		} else {
 			left = mid + 1
 		}
 	}
 
-	if nums[left] != target {
+	// If start occurence of target is not found, end cannot be found too. So avoid 2nd binary search
+	// If If start occurence of target is not found, start variable will remain as -1
+	if start == -1 {
 		return []int{-1, -1}
 	}
 
-	rightBorderID := left
-
-	left, right = 0, rightBorderID
-	for left < right {
+	left, right = 0, len(nums)-1
+	end := -1
+	for left <= right {
 		mid := left + (right-left)/2
 
-		if nums[mid] >= target && (mid == 0 || nums[mid-1] <= target) {
-			right = mid
+		if target == nums[mid] {
+			end = mid
+			left = mid + 1
+		} else if target < nums[mid] {
+			right = mid - 1
 		} else {
 			left = mid + 1
 		}
 	}
 
-	return []int{left, rightBorderID}
+	return []int{start, end}
 }
 
 // 153. Find Minimum in Rotated Sorted Array
@@ -182,4 +194,44 @@ func findPivot(nums []int) int {
 	}
 
 	return left
+}
+
+// Find an element in infinity array (logn time). return its index
+// Infinty array means array's length shouldnt be used
+// Idea is to search chunks of array starting length 2 and double it
+func Infinity(nums []int, target int) int {
+	start := 0
+	end := 1
+
+	// if got doubt use a simple example
+	for target > nums[end] {
+		newStart := end + 1
+		end = end + (end-start+1)*2
+		start = newStart
+	}
+
+	return binarySearch(nums, target, start, end)
+}
+
+func binarySearch(nums []int, target, start, end int) int {
+	for start <= end {
+		mid := start + (end-start)/2
+
+		if target == nums[mid] {
+			return mid
+		} else if target < nums[mid] {
+			end = mid - 1
+		} else {
+			start = mid + 1
+		}
+	}
+
+	return -1
+}
+
+// 852. Peak Index in a Mountain Array
+
+func main() {
+	nums := []int{1, 5, 6, 7, 8, 9, 10, 11}
+	fmt.Println(Infinity(nums, 6))
 }
