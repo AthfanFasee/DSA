@@ -93,23 +93,26 @@ func search(nums []int, target int) int {
 	left, right := 0, len(nums)-1
 
 	// [4,5,6,7,0,1,2], target = 0
-	// [3,4,0,1,2]
+	// [3,0,1,2]
 	for left < right {
-		mid := (left + right) / 2
+		mid := left + (right-left)/2
 		if nums[mid] > nums[right] {
 			left = mid + 1
 		} else {
 			right = mid
 		}
 	}
-
+	// We can slo say this is right. Bcs at the end of loop, as condition is left < right
+	// both left and right will end up pointing same lement. The next iteration loop will break right. So yh
+	// Both left and right now points to same guy which is the pivot
 	pivot := left
 
 	// Regular binary search
+	// [4,5,6,7,0,1,2] // We need to binary search from 0 to 7 (thinking like imaginary array)
 	left, right = pivot, pivot-1+len(nums) // 4, 10
 	for left <= right {
-		mid := (left + right) / 2
-		midVal := nums[mid%len(nums)]
+		mid := (left + right) / 2     // This will give mid in imaginary array
+		midVal := nums[mid%len(nums)] // This is how u find mid correctly in original array from imaginary array
 
 		if midVal > target {
 			right = mid - 1
@@ -182,7 +185,7 @@ func findPivot(nums []int) int {
 	right := len(nums) - 1
 
 	for left < right {
-		mid := (left + right) / 2
+		mid := left + (right-left)/2
 
 		// If the element at the mid index is greater than the nums[right],
 		// then the pivot index must be to the right of the mid index
@@ -190,6 +193,43 @@ func findPivot(nums []int) int {
 			left = mid + 1
 		} else {
 			right = mid
+		}
+	}
+
+	return left
+}
+
+// find pivot in sorted array which contains duplicates
+func findPivotDuplicate(nums []int) int {
+	// Since all elements in the array are unique,
+	// if the array is rotated, the first element will be greater than the last element.
+	// Hence we can do an early return if the first element is less than the last element.
+	if nums[0] < nums[len(nums)-1] {
+		return -1
+	}
+
+	left := 0
+	right := len(nums) - 1
+
+	for left < right {
+		mid := left + (right-left)/2
+
+		// If the element at the mid index is greater than the nums[right],
+		// then the pivot index must be to the right of the mid index
+		if nums[mid] > nums[right] {
+			left = mid + 1
+		} else if nums[mid] < nums[right] {
+			right = mid
+		} else {
+			// nums[mid] == nums[right] // Earlier we didnt consider this case. But this time it's possible
+			// To handle this case, we make sure if right is pivot then we cautiously decrease right by 1.
+			// This is a safe move to make because it reduces the search space while ensuring that the pivot remains within it
+			// the pivot index is the position of the smallest element in the array and the only place in the sorted and rotated array where the next number is smaller than the previous one
+			// The right > 0 check is necessary to avoid an ArrayIndexOutOfBounds when right is 0
+			if right > 0 && nums[right] < nums[right-1] {
+				return right
+			}
+			right--
 		}
 	}
 
@@ -230,13 +270,13 @@ func binarySearch(nums []int, target, start, end int) int {
 }
 
 // 852. Peak Index in a Mountain Array
-func peakIndexInMountainArray(arr []int) int {
-	left, right := 0, len(arr)-1
+func peakIndexInMountainArray(nums []int) int {
+	left, right := 0, len(nums)-1
 
 	for left < right { // Condition will be like this when at the end we expect both left and right to point at the answer. i dont want loop to go further like left being equal to left = right + 1 and all
 		mid := left + (right-left)/2
 
-		if arr[mid] > arr[mid+1] {
+		if nums[mid] > nums[mid+1] {
 			// you are in dec part of array
 			// this may be the ans, but look at left
 			// this is why end != mid - 1
@@ -254,7 +294,50 @@ func peakIndexInMountainArray(arr []int) int {
 	return left // or return right. They both will point to answer
 }
 
+// 1095. Find in Mountain Array
+// Find peak, binary search to asc array and desc array seprately
+func findInMountainArray(target int, nums []int) int {
+	peak := peakIndexInMountainArray(nums)
+	firstTry := orderAgnosticBS(nums, target, 0, peak)
+	if firstTry != -1 {
+		return firstTry
+	}
+	return orderAgnosticBS(nums, target, peak+1, len(nums)-1)
+}
+
+// BinarySearch but Array could be in either ASC or DCS Order
+func orderAgnosticBS(nums []int, target, start, end int) int { // normally u wont provide start and end, i'm providing as this is used as a helper
+
+	// find whether the array is sorted in ascending or descending
+	isAsc := nums[start] < nums[end]
+
+	for start <= end {
+		// find the middle element
+		// int mid = (start + end) / 2; // might be possible that (start + end) exceeds the range of int in a programming language
+		mid := start + (end-start)/2
+
+		if nums[mid] == target {
+			return mid
+		}
+
+		if isAsc {
+			if target < nums[mid] {
+				end = mid - 1
+			} else {
+				start = mid + 1
+			}
+		} else {
+			// for dcs order just change arrow direction :)
+			if target > nums[mid] {
+				end = mid - 1
+			} else {
+				start = mid + 1
+			}
+		}
+	}
+	return -1
+}
+
 func main() {
-	nums := []int{1, 5, 6, 7, 8, 9, 10, 11}
-	fmt.Println(Infinity(nums, 6))
+	fmt.Println(findPivotDuplicate([]int{3}))
 }
