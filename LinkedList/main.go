@@ -184,6 +184,7 @@ func merge(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	return head
 }
 
+// 21. Merge Two Sorted Lists
 // Merge the two lists in a one sorted list. Return the head of the merged linked list (Leetcode 21)
 func mergeSorted(head1 *nodeInt, head2 *nodeInt) *nodeInt {
 	result := &nodeInt{}
@@ -371,7 +372,7 @@ func removeNthFromEnd(head *node, n int) *node {
 // You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
 // Merge all the linked-lists into one sorted linked-list and return it.
 func mergeKLists(lists []*node) *node {
-	if lists == nil || len(lists) == 0 {
+	if len(lists) == 0 {
 		return nil
 	}
 
@@ -381,14 +382,16 @@ func mergeKLists(lists []*node) *node {
 		l2 := lists[1]
 		lists = lists[2:]
 
-		merged := mergeTwoLists(l1, l2)
+		merged := mergeTwoSortedListsRecursive(l1, l2)
+		// The merged list is then appended to the end of lists slice
 		lists = append(lists, merged)
 	}
 
 	return lists[0]
 }
 
-func mergeTwoLists(l1, l2 *node) *node {
+// This is also valid answer for leetcode 21 (merge two sorted linked lists)
+func mergeTwoSortedListsRecursive(l1, l2 *node) *node {
 	if l1 == nil {
 		return l2
 	}
@@ -397,10 +400,10 @@ func mergeTwoLists(l1, l2 *node) *node {
 	}
 
 	if l1.Val < l2.Val {
-		l1.Next = mergeTwoLists(l1.Next, l2)
+		l1.Next = mergeTwoSortedListsRecursive(l1.Next, l2)
 		return l1
 	} else {
-		l2.Next = mergeTwoLists(l2.Next, l1)
+		l2.Next = mergeTwoSortedListsRecursive(l2.Next, l1)
 		return l2
 	}
 }

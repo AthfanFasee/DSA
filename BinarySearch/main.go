@@ -286,11 +286,6 @@ func peakIndexInMountainArray(nums []int) int {
 			left = mid + 1 // because we know that mid+1 element > mid element
 		}
 	}
-	// in the end, start == end and pointing to the largest number because of the 2 checks above
-	// start and end are always trying to find max element in the above 2 checks
-	// hence, when they are pointing to just one element, that is the max one because that is what the checks say
-	// more elaboration: at every point of time for start and end, they have the best possible answer till that time
-	// and if we are saying that only one item is remaining, hence cuz of above line that is the best possible answer.
 	return left // or return right. They both will point to answer
 }
 
@@ -307,7 +302,6 @@ func findInMountainArray(target int, nums []int) int {
 
 // BinarySearch but Array could be in either ASC or DCS Order
 func orderAgnosticBS(nums []int, target, start, end int) int { // normally u wont provide start and end, i'm providing as this is used as a helper
-
 	// find whether the array is sorted in ascending or descending
 	isAsc := nums[start] < nums[end]
 
@@ -337,6 +331,20 @@ func orderAgnosticBS(nums []int, target, start, end int) int { // normally u won
 	}
 	return -1
 }
+
+// Rotated array count.
+// Find how many times an array is rotated
+func find(nums []int) int {
+	// Simple find the pivot and thats ur answer
+	pivot := findPivot(nums)
+	// Handle case where array is not rotated
+	if pivot == -1 {
+		return 0
+	}
+	return pivot
+}
+
+// 410. Split Array Largest Sum
 
 func main() {
 	fmt.Println(findPivotDuplicate([]int{3}))
