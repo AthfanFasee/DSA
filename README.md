@@ -4,17 +4,7 @@ This is a repository focused on implementing efficient solutions in Golang. It s
 
 ## Why Explore this Repository?
 
-1. **Expertise in DSA with Golang**: As you delve into this repository, you will witness my exceptional skills and knowledge in implementing data structures and writing algorithms specifically in Golang. I have honed my expertise to provide effective and optimized solutions to various DSA problems.
-
-2. **Study Material and Algorithmic Notes**: This repository is my personal study material, where I meticulously compile detailed notes and steps for each algorithm implementation. These notes serve as valuable resources for learning and understanding the logic behind solving DSA problems effectively.
-
-3. **Effective Solutions for DSA Problems**: You may refer to this repository to find efficient solutions for specific DSA problems. By examining the code implementations, you will gain insights into optimal approaches and techniques that can be applied to solve similar problems.
-
-4. **Data Structure Implementations**: This repository also showcases my proficiency in implementing various data structures. You can explore how specific data structures are implemented and understand their practical usage in solving different problems, all within the context of Golang.
-
-## How to Use this Repository
-
-1. **Explore the Code**: Browse through the repository's directory structure to find the DSA topic or specific problem you're interested in. Each topic/problem has its dedicated folder, containing the corresponding Golang code implementation and accompanying documentation.
+1. **Expertise in DSA with Golang**: As you delve into this repository, you will witness my exceptional skills and knowledge in implementing data structures and writing algorithms specifically in Golang. Each topic/problem has its dedicated folder, containing the corresponding Golang code implementation and accompanying documentation.
 
 2. **Study the Algorithmic Notes**: Open the code files to access the detailed notes and step-by-step explanations provided for each algorithm. These notes will guide you through the thought process behind each implementation, helping you grasp the core concepts and techniques used.
 
