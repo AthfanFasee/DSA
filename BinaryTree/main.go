@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"math"
+	"strconv"
+	"strings"
 )
 
 type Node struct {
@@ -488,6 +491,89 @@ func indexOf(nums []int, target int) int {
 		}
 	}
 	return -1
+}
+
+// 98. Validate Binary Search Tree
+func isValidBST(root *Node) bool {
+	return valid(root, math.MinInt, math.MaxInt)
+}
+
+func valid(node *Node, left, right int) bool {
+	if node == nil {
+		return true
+	}
+	if node.Val <= left || node.Val >= right {
+		return false
+	}
+	return valid(node.Left, left, node.Val) && valid(node.Right, node.Val, right)
+}
+
+// 230. Kth Smallest Element in a BST
+func kthSmallest(root *Node, k int) int {
+	n := 0
+	stack := []*Node{}
+	cur := root
+
+	for cur != nil || len(stack) > 0 {
+		for cur != nil {
+			stack = append(stack, cur)
+			cur = cur.Left
+		}
+
+		cur = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		n++
+		if n == k { // According to question we are gurrenteed to return here
+			return cur.Val
+		}
+
+		cur = cur.Right
+	}
+
+	return 0 // Just to satisy compiler
+}
+
+type Codec struct {
+}
+
+func Constructor() Codec {
+	return Codec{}
+}
+
+func (this *Codec) serialize(root *Node) string {
+	var buffer bytes.Buffer
+
+	var dfs func(node *Node)
+	dfs = func(node *Node) {
+		if node == nil {
+			buffer.WriteString("N,")
+		} else {
+			buffer.WriteString(strconv.Itoa(node.Val))
+			buffer.WriteString(",")
+			dfs(node.Left)
+			dfs(node.Right)
+		}
+	}
+	dfs(root)
+
+	return buffer.String()
+}
+
+func (this *Codec) deserialize(data string) *Node {
+	tokens := strings.Split(data, ",")
+
+	var dfs func() *Node
+	dfs = func() *Node {
+		token := tokens[0]
+		tokens = tokens[1:]
+		if token == "N" {
+			return nil
+		}
+		val, _ := strconv.Atoi(token)
+		return &Node{val, dfs(), dfs()}
+	}
+
+	return dfs()
 }
 
 func main() {
