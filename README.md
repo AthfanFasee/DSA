@@ -1,6 +1,6 @@
 # Welcome to my DSA Repository!
 
-This is a repository focused on implementing efficient solutions in Golang. It serves as comprehensive study material where I diligently take notes and document the step-by-step process of writing algorithms for DSA problems, particularly those found on platforms like LeetCode.
+This is a repository focused on implementing efficient solutions in Golang. It serves as comprehensive study material where I diligently take notes and document the step-by-step process of writing algorithms for DSA problems, particularly those found on platforms like LeetCode and a few other famous ones!
 
 ## Why Explore this Repository?
 
@@ -8,7 +8,7 @@ This is a repository focused on implementing efficient solutions in Golang. It s
 
 2. **Study the Algorithmic Notes**: Open the code files to access the detailed notes and step-by-step explanations provided for each algorithm. These notes will guide you through the thought process behind each implementation, helping you grasp the core concepts and techniques used.
 
-3. **Learn from Effective Solutions**: By studying the code implementations, you will gain exposure to effective solutions for DSA problems. Pay attention to the algorithmic strategies employed, as well as any optimizations applied to minimize time and space complexities.
+3. **Learn from Effective Solutions**: By studying the code implementations, you will gain exposure to effective solutions for DSA problems. Pay attention to the algorithmic strategies used, as well as any optimizations applied to minimize time and space complexities.
 
 4. **Implement Data Structures**: Take advantage of the repository's data structure implementations. Explore how specific data structures are constructed and understand their functionality. You can utilize these implementations as building blocks to solve DSA problems efficiently in Golang.
 
