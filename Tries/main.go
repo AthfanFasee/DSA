@@ -54,3 +54,49 @@ func Search(idx int, word string, node *TrieNode) bool {
 
 	return false
 }
+
+// 208. Implement Trie (Prefix Tree)
+type Trie struct {
+	Children [26]*Trie
+	IsWord   bool
+}
+
+func Constructor2() Trie {
+	return Trie{}
+}
+
+func (this *Trie) Insert(word string) {
+	cur := this
+	for _, v := range word {
+		i := v - 'a'
+		if cur.Children[i] == nil {
+			cur.Children[i] = &Trie{}
+		}
+		cur = cur.Children[i]
+	}
+	cur.IsWord = true
+}
+
+func (this *Trie) Search(word string) bool {
+	cur := this
+	for _, v := range word {
+		i := v - 'a'
+		if cur.Children[i] == nil {
+			return false
+		}
+		cur = cur.Children[i]
+	}
+	return cur.IsWord
+}
+
+func (this *Trie) StartsWith(prefix string) bool {
+	cur := this
+	for _, v := range prefix {
+		i := v - 'a'
+		if cur.Children[i] == nil {
+			return false
+		}
+		cur = cur.Children[i]
+	}
+	return true
+}

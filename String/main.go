@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -251,6 +252,61 @@ func groupAnagramsMethod2(strs []string) [][]string {
 	}
 
 	return res
+}
+
+// 76. Minimum Window Substring
+func minWindow(s string, t string) string {
+	if t == "" {
+		return ""
+	}
+
+	countT, window := make(map[byte]int), make(map[byte]int)
+
+	for i := range t {
+		countT[t[i]]++
+	}
+
+	left, right := 0, 0
+	validCount := 0
+	startIndex := 0
+	shortestResultLen := math.MaxInt
+	for right < len(s) {
+		char := s[right]
+		// expand the window
+		right++
+
+		if _, ok := countT[char]; ok {
+			// increase char count in window
+			window[char]++
+
+			if window[char] == countT[char] {
+				validCount++
+			}
+		}
+		// every char is inside, consider shrink the window
+		for validCount == len(countT) {
+			if right-left < shortestResultLen {
+				startIndex = left
+				shortestResultLen = right - left
+			}
+
+			charToRemove := s[left]
+			left++
+
+			if _, ok := countT[charToRemove]; ok {
+				if window[charToRemove] == countT[charToRemove] {
+					validCount--
+				}
+				window[charToRemove]--
+			}
+		}
+	}
+
+	if shortestResultLen == math.MaxInt {
+		return ""
+	}
+
+	return s[startIndex : startIndex+shortestResultLen]
 }
 
 func main() {

@@ -533,6 +533,7 @@ func kthSmallest(root *Node, k int) int {
 	return 0 // Just to satisy compiler
 }
 
+// 297. Serialize and Deserialize Binary Tree
 type Codec struct {
 }
 
