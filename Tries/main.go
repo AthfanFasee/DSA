@@ -17,8 +17,8 @@ func Constructor() WordDictionary {
 
 func (this *WordDictionary) AddWord(word string) {
 	curr := this.Root
-	for i := 0; i < len(word); i++ {
-		idx := int(word[i] - 'a')
+	for _, v := range word {
+		idx := v - 'a'
 		if curr.Children[idx] == nil {
 			curr.Children[idx] = &TrieNode{}
 		}

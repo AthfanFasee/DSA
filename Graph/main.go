@@ -303,6 +303,61 @@ func exploreIslandSize(grid [][]string, r, c int) int {
 	return size
 }
 
+// 79. Word Search (also considered as backtracking problem)
+// READ these notes before accessing this problem
+// For ASCII characters, their rune and byte values are the same. This is because ASCII characters use only 7 bits,
+// so they can be represented in a single byte, which has 8 bits.
+
+// Rune in Go is a type that is used to represent a Unicode CodePoint.
+// It can handle any Unicode character, which requires up to 4 bytes, not just ASCII characters.
+
+// But when an ASCII character is represented as a rune, it still fits in a single byte,
+// and the value is the same as the byte representation of the ASCII character.
+
+func exist(board [][]byte, word string) bool {
+	ROWS, COLUMNS := len(board), len(board[0])
+
+	var dfs func(int, int, int) bool
+	dfs = func(r, c, i int) bool {
+		if len(word) == i {
+			return true
+		}
+
+		if r < 0 || c < 0 || r >= ROWS || c >= COLUMNS {
+			return false
+		}
+		if board[r][c] != word[i] || board[r][c] == '*' {
+			return false
+		}
+		// It's same trick as explore island, but in here we only want a temporary change
+		originalValue := board[r][c]
+		// Conver this to something non-string, so it can never match a byte which represents a string
+		// Converting here is fine, bcs we are alrdy done checking everything related to board[r][c]
+		// In this case, the '*' character is an ASCII character, which can be represented as a single byte.
+		// Thus, assigning this character to a byte is perfectly valid.
+		// in here, Go automatically converts the rune to its byte representation because board[r][c] is of type byte.
+		board[r][c] = '*'
+
+		result := dfs(r+1, c, i+1) || dfs(r, c+1, i+1) || dfs(r-1, c, i+1) || dfs(r, c-1, i+1)
+
+		// Changing back is important, bcs when we start from each place in grid for each chaarcter in word (word[i]),
+		// we want it to be original again.
+		board[r][c] = originalValue
+
+		return result
+	}
+
+	for r, row := range board {
+		for c := range row {
+			if dfs(r, c, 0) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func main() {
 	// Directed Graph
 

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strings"
 )
 
@@ -256,57 +255,45 @@ func groupAnagramsMethod2(strs []string) [][]string {
 
 // 76. Minimum Window Substring
 func minWindow(s string, t string) string {
-	if t == "" {
-		return ""
-	}
-
-	countT, window := make(map[byte]int), make(map[byte]int)
-
-	for i := range t {
-		countT[t[i]]++
-	}
-
 	left, right := 0, 0
-	validCount := 0
-	startIndex := 0
-	shortestResultLen := math.MaxInt
+	countT := make(map[byte]int)
+	window := make(map[byte]int)
+	distinctCharacterCount := 0
+	minSubstring := ""
+
+	// fill in countT map first
+	for index := range t {
+		countT[t[index]]++
+	}
+
 	for right < len(s) {
-		char := s[right]
-		// expand the window
-		right++
+		window[s[right]]++
 
-		if _, ok := countT[char]; ok {
-			// increase char count in window
-			window[char]++
-
-			if window[char] == countT[char] {
-				validCount++
-			}
+		if countT[s[right]] == window[s[right]] {
+			distinctCharacterCount++
 		}
-		// every char is inside, consider shrink the window
-		for validCount == len(countT) {
-			if right-left < shortestResultLen {
-				startIndex = left
-				shortestResultLen = right - left
+
+		// Keep popping lement from left side of window until this condition is no longer met
+		for distinctCharacterCount == len(countT) {
+			if minSubstring == "" {
+				minSubstring = s[left : right+1] // end is excluded, hence end + 1
+			}
+			if right-left+1 < len(minSubstring) {
+				minSubstring = s[left : right+1]
 			}
 
-			charToRemove := s[left]
+			window[s[left]]--
+			if window[s[left]] < countT[s[left]] {
+				distinctCharacterCount--
+			}
+
+			// expan the window
 			left++
-
-			if _, ok := countT[charToRemove]; ok {
-				if window[charToRemove] == countT[charToRemove] {
-					validCount--
-				}
-				window[charToRemove]--
-			}
 		}
+		right++
 	}
 
-	if shortestResultLen == math.MaxInt {
-		return ""
-	}
-
-	return s[startIndex : startIndex+shortestResultLen]
+	return minSubstring
 }
 
 func main() {
