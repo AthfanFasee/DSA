@@ -191,7 +191,7 @@ func exploreWithCount(graph graph, node string, visitedSet map[string]bool) int 
 	return size
 }
 
-// Find shortest path from NodeA to NodeB (edge count) in undirected graph
+// Find shortest path from NodeA to NodeB (edge count) in undirected graph.
 func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 	graph := make(graph)
 	for _, v := range edges {
@@ -225,7 +225,7 @@ func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 	return -1
 }
 
-// Count "L" or lands or islands in given grid
+// Count "L" or lands or islands in given grid.
 func islandCount(grid [][]string) int {
 	count := 0
 
@@ -260,11 +260,11 @@ func exploreGrid(grid [][]string, r, c int) bool {
 	exploreGrid(grid, r, c+1)
 	exploreGrid(grid, r, c-1)
 
-	// So i can return true after a land is explored
+	// So i can return true after a land is explored.
 	return true
 }
 
-// Return length of smallest island in given grid
+// Return length of smallest island in given grid.
 func smallIslandSize(grid [][]string) int {
 	count := math.MaxInt32 // Can be used over infinity
 	for r, row := range grid {
