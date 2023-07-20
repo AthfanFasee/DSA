@@ -19,6 +19,10 @@ func (s stack) Pop() (stack, string) {
 }
 
 // Print graph in depth-first order
+func depthFirst2(graph map[string][]string, source string) {
+
+}
+
 func depthFirst(graph map[string][]string, source string) {
 	stack := stack{source}
 
@@ -34,7 +38,7 @@ func depthFirst(graph map[string][]string, source string) {
 }
 
 func depthFirstRecursive(graph map[string][]string, source string) {
-	// A base case like this is not needed here, bcs loop on a nil map is valid, and it will automatically not call my recursive function at that scenario
+	// A base case like this is not needed here, In Go, if you attempt to range over a nil slice, it won't result in a runtime error. Instead, the loop just won't execute, and it will automatically not call my recursive function at that scenario
 	// if graph[source] == nil {
 	// 	return
 	// }
@@ -361,14 +365,14 @@ func exist(board [][]byte, word string) bool {
 func main() {
 	// Directed Graph
 
-	// graph := map[string][]string{
-	// 	"a": {"c", "b"},
-	// 	"b": {"d"},
-	// 	"c": {"e"},
-	// 	"d": {"f"},
-	// 	"e": {},
-	// 	"f": {},
-	// }
+	graph := map[string][]string{
+		"a": {"c", "b"},
+		"b": {"d"},
+		"c": {"e"},
+		"d": {"f"},
+		"e": {},
+		"f": {},
+	}
 	// graph := map[int][]int{
 	// 	3: {},
 	// 	4: {6},
@@ -382,13 +386,13 @@ func main() {
 
 	// Undirected Graph's edges
 
-	edges := [][]string{
-		{"i", "j"},
-		{"k", "i"},
-		{"m", "k"},
-		{"k", "l"},
-		{"o", "n"},
-	}
+	// edges := [][]string{
+	// 	{"i", "j"},
+	// 	{"k", "i"},
+	// 	{"m", "k"},
+	// 	{"k", "l"},
+	// 	{"o", "n"},
+	// }
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
@@ -412,7 +416,8 @@ func main() {
 	// }
 
 	// depthFirst(graph, "a")
-	// depthFirstRecursive(graph, "a")
+	depthFirst2(graph, "a")
+	depthFirstRecursive(graph, "a")
 	// breadthFisrt(graph, "a")
 	// print(graph, "a")
 
@@ -422,7 +427,7 @@ func main() {
 	// fmt.Println(undirectedPathHasPath(edges, "i", "o"))
 
 	// fmt.Println(connectedComponentCount(graph))
-	fmt.Println(funcshortestPath(edges, "i", "o"))
+	// fmt.Println(funcshortestPath(edges, "i", "o"))
 	// fmt.Println(largestComponent(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
