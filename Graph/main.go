@@ -19,10 +19,6 @@ func (s stack) Pop() (stack, string) {
 }
 
 // Print graph in depth-first order
-func depthFirst2(graph map[string][]string, source string) {
-
-}
-
 func depthFirst(graph map[string][]string, source string) {
 	stack := stack{source}
 
@@ -65,7 +61,7 @@ func breadthFisrt(graph map[string][]string, source string) {
 	}
 }
 
-// Find if we can travel from src to dst in graph
+// Find if we can travel from src to dst in graph (graph is asyclic)
 func hasPath(graph map[string][]string, src string, dst string) bool {
 	queue := []string{src}
 
@@ -93,7 +89,7 @@ func hasPathRecsursive(graph map[string][]string, src string, dst string) bool {
 
 	for _, v := range graph[src] {
 		if hasPathRecsursive(graph, v, dst) {
-			return true
+			return true // This return is important. Why? cz the fucntions whom are called recursive only returns themselves, they wont end the main function when they return. Instead they will only return the return value to it's caller.
 		}
 	}
 
@@ -134,7 +130,42 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 	return false
 }
 
-// Find count of connected components in graph
+// Find count of connected components in graph in an undirected graph (Normal)
+func connectedComponentCountNormal(graph graph) int {
+	count := 0
+	visitedSet := make(map[string]bool)
+
+	for src := range graph {
+		if visitedSet[src] != true {
+			count++
+			depthFirstNormal(graph, src, visitedSet)
+		}
+
+	}
+
+	return count
+}
+
+func depthFirstNormal(graph graph, src string, visitedSet map[string]bool) int {
+	stack := []string{src}
+
+	for len(stack) > 0 {
+		current := stack[len(stack)-1]
+		visitedSet[current] = true
+		stack = stack[:len(stack)-1]
+
+		for _, v := range graph[current] {
+			if visitedSet[v] != true {
+				stack = append(stack, v)
+			}
+
+		}
+	}
+
+	return 1
+}
+
+// // Find count of connected components in graph in an undirected graph (Recursive)
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -163,7 +194,11 @@ func explore(graph graph, Node string, visitedSet map[string]bool) bool {
 	return true
 }
 
-// Return the count of largest component in an undirected graph
+// // Return the count of largest component in an undirected graph
+// func largestComponent2(graph graph) int {
+
+// }
+
 func largestComponent(graph graph) int {
 	longest := 0
 	visitedSet := make(map[string]bool)
@@ -365,14 +400,14 @@ func exist(board [][]byte, word string) bool {
 func main() {
 	// Directed Graph
 
-	graph := map[string][]string{
-		"a": {"c", "b"},
-		"b": {"d"},
-		"c": {"e"},
-		"d": {"f"},
-		"e": {},
-		"f": {},
-	}
+	// graph := map[string][]string{
+	// 	"a": {"c", "b"},
+	// 	"b": {"d"},
+	// 	"c": {"e"},
+	// 	"d": {"f"},
+	// 	"e": {},
+	// 	"f": {},
+	// }
 	// graph := map[int][]int{
 	// 	3: {},
 	// 	4: {6},
@@ -396,15 +431,15 @@ func main() {
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
-	// graph := map[string][]string{
-	// 	"i": {"j", "k"},
-	// 	"j": {"i"},
-	// 	"k": {"i", "m", "l"},
-	// 	"m": {"k"},
-	// 	"l": {"k"},
-	// 	"o": {"n"},
-	// 	"n": {"o"},
-	// }
+	graph := map[string][]string{
+		"i": {"j", "k"},
+		"j": {"i"},
+		"k": {"i", "m", "l"},
+		"m": {"k"},
+		"l": {"k"},
+		"o": {"n"},
+		"n": {"o"},
+	}
 
 	// grid := [][]string{
 	// 	{"W", "L", "W", "W", "W"},
@@ -416,8 +451,8 @@ func main() {
 	// }
 
 	// depthFirst(graph, "a")
-	depthFirst2(graph, "a")
-	depthFirstRecursive(graph, "a")
+	// depthFirst2(graph, "a")
+	// depthFirstRecursive(graph, "a")
 	// breadthFisrt(graph, "a")
 	// print(graph, "a")
 
@@ -427,8 +462,10 @@ func main() {
 	// fmt.Println(undirectedPathHasPath(edges, "i", "o"))
 
 	// fmt.Println(connectedComponentCount(graph))
+	// fmt.Println(connectedComponentCountNormal(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "o"))
-	// fmt.Println(largestComponent(graph))
+	fmt.Println(largestComponent(graph))
+	// fmt.Println(largestComponent2(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
 	// fmt.Println(smallIslandSize(grid))
