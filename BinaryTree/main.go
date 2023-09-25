@@ -16,7 +16,7 @@ type Node struct {
 
 type stack []*Node
 
-// Appends an elemend to stack. When using it incode we have to actually re-assign it to stack like this, stack = stack.Push(&a)
+// Appends an elemend to stack. When using it in code we have to actually re-assign it to stack like this, stack = stack.Push(&a)
 func (s stack) Push(v *Node) stack {
 	return append(s, v)
 }
@@ -494,6 +494,8 @@ func indexOf(nums []int, target int) int {
 }
 
 // 98. Validate Binary Search Tree
+// MUST WATCH SOLUTION FOR THIS (TRICKY)
+// Need to think interms of new boundaries (-infnity and +infinity)
 func isValidBST(root *Node) bool {
 	return valid(root, math.MinInt, math.MaxInt)
 }
@@ -502,7 +504,13 @@ func valid(node *Node, left, right int) bool {
 	if node == nil {
 		return true
 	}
-	if node.Val <= left || node.Val >= right {
+
+	// Just look at an example tree and write this for ease
+	if !(node.Val < right) {
+		return false
+	}
+
+	if !(node.Val > left) {
 		return false
 	}
 	return valid(node.Left, left, node.Val) && valid(node.Right, node.Val, right)

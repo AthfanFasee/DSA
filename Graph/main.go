@@ -131,6 +131,7 @@ func hasPathWithSet(graph graph, src string, dst string, visitedSet map[string]b
 }
 
 // Find count of connected components in graph in an undirected graph (Normal)
+// I find this more easy and it is more effective too (space wise)
 func connectedComponentCountNormal(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -146,7 +147,7 @@ func connectedComponentCountNormal(graph graph) int {
 	return count
 }
 
-func depthFirstNormal(graph graph, src string, visitedSet map[string]bool) int {
+func depthFirstNormal(graph graph, src string, visitedSet map[string]bool) {
 	stack := []string{src}
 
 	for len(stack) > 0 {
@@ -161,11 +162,9 @@ func depthFirstNormal(graph graph, src string, visitedSet map[string]bool) int {
 
 		}
 	}
-
-	return 1
 }
 
-// // Find count of connected components in graph in an undirected graph (Recursive)
+// Find count of connected components in graph in an undirected graph (Recursive)
 func connectedComponentCount(graph graph) int {
 	count := 0
 	visitedSet := make(map[string]bool)
@@ -194,11 +193,43 @@ func explore(graph graph, Node string, visitedSet map[string]bool) bool {
 	return true
 }
 
-// // Return the count of largest component in an undirected graph
-// func largestComponent2(graph graph) int {
+// Return the count of largest component in an undirected graph (Normal way)
+// I find this more easy and it is more effective too (space wise)
+func largestComponent2(graph graph) int {
+	count := 0
+	visitedSet := make(map[string]bool)
 
-// }
+	for node := range graph {
+		if visitedSet[node] != true {
+			result := exploreWithCount2(graph, node, visitedSet)
+			if result > count {
+				count = result
+			}
+		}
+	}
 
+	return count
+}
+func exploreWithCount2(graph graph, src string, visitedSet map[string]bool) int {
+	stack := []string{src}
+	count := 0
+	for len(stack) > 0 {
+		count++
+		current := stack[len(stack)-1]
+		visitedSet[current] = true
+		stack = stack[:len(stack)-1]
+
+		for _, node := range graph[current] {
+			if visitedSet[node] != true {
+				stack = append(stack, node)
+			}
+		}
+	}
+
+	return count
+}
+
+// Return the count of largest component in an undirected graph (Recursive)
 func largestComponent(graph graph) int {
 	longest := 0
 	visitedSet := make(map[string]bool)
@@ -223,15 +254,14 @@ func exploreWithCount(graph graph, node string, visitedSet map[string]bool) int 
 	size := 1
 
 	for _, v := range graph[node] {
-		size += exploreWithCount(graph, v, visitedSet) // We shouldn't return here. Bcs in scenarios where this function is meant to explore the whole thing and find something (in here total count of nodes)
-		// We shouldn,t be returning in middle. Dont consider the return will wait for recursion to end. For some reason it's messed up. But returning at last is fine
-	}
+		size += exploreWithCount(graph, v, visitedSet) // We shouldn't return here.
+	} // Bcs in scenarios where this function is meant to explore the whole thing and find something (in here total count of nodes)
 
 	return size
 }
 
 // Find shortest path from NodeA to NodeB (edge count) in undirected graph.
-func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
+func funcshortestPath(edges [][]string, nodeA, nodeB string) int {
 	graph := make(graph)
 	for _, v := range edges {
 		graph[v[0]] = append(graph[v[0]], v[1])
@@ -265,6 +295,9 @@ func funcshortestPath(edges [][]string, nodeA string, nodeB string) int {
 }
 
 // Count "L" or lands or islands in given grid.
+// func islandCount2(grid [][]string) int {
+
+// }
 func islandCount(grid [][]string) int {
 	count := 0
 
@@ -431,15 +464,15 @@ func main() {
 
 	// Adjacency list using the edges given (after we build graph from given edges)
 
-	graph := map[string][]string{
-		"i": {"j", "k"},
-		"j": {"i"},
-		"k": {"i", "m", "l"},
-		"m": {"k"},
-		"l": {"k"},
-		"o": {"n"},
-		"n": {"o"},
-	}
+	// graph := map[string][]string{
+	// 	"i": {"j", "k"},
+	// 	"j": {"i"},
+	// 	"k": {"i", "m", "l"},
+	// 	"m": {"k"},
+	// 	"l": {"k"},
+	// 	"o": {"n"},
+	// 	"n": {"o"},
+	// }
 
 	// grid := [][]string{
 	// 	{"W", "L", "W", "W", "W"},
@@ -464,10 +497,11 @@ func main() {
 	// fmt.Println(connectedComponentCount(graph))
 	// fmt.Println(connectedComponentCountNormal(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "o"))
-	fmt.Println(largestComponent(graph))
+	// fmt.Println(largestComponent(graph))
 	// fmt.Println(largestComponent2(graph))
 	// fmt.Println(funcshortestPath(edges, "i", "l"))
 	// fmt.Println(islandCount(grid))
+	// fmt.Println(islandCount2(grid))
 	// fmt.Println(smallIslandSize(grid))
 
 }

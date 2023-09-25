@@ -9,7 +9,7 @@ import (
 // Given two strings s and t, return true if t is an anagram of s, and false otherwise.
 // An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 // Basically they both gotta have exacly same characters, same amount
-//Constraints:
+// Constraints:
 // 1 <= s.length, t.length <= 5 * 104
 // s and t consist of lowercase English letters.
 func anagram(s, t string) bool {
@@ -40,8 +40,7 @@ func anagram(s, t string) bool {
 }
 
 // Bonus: What if the inputs contain Unicode characters?
-// We could maybe go on a quest to find out how many Unicode chars are there, and maintain a slice with many thousands of elements, and technically this would still be O(n),
-// but it is a cheeky solution with a lot of waste. We can do better, we can use a map
+// we can use a map
 
 // We need to make a map of runes, because bytes are not adequae for all unicode characters. The rest is easy
 
@@ -90,7 +89,7 @@ func validParentheses(s string) bool {
 			stack = append(stack, ']')
 		default:
 			// If one of the '(' '[' '{' came before, stack cannot be empty at 2nd step
-			// When for an ex in this string "( ( ) )",  ')' comes as c, it should be in stack if the ement before it was '('.
+			// When for an ex in this string "( ( ) )",  ')' comes as c, it should be in stack if the element before it was '('.
 			// Bcs if the ammend before it was '(' it's added to the stack in case 1 and default case is skipped, so it's not removed.
 			// We are checking both of those conditions here
 			if len(stack) == 0 || c != stack[len(stack)-1] { // So this line basically makes sure, ')' got it's matching curly '(' before it comes in the string
@@ -273,12 +272,12 @@ func minWindow(s string, t string) string {
 			distinctCharacterCount++
 		}
 
-		// Keep popping lement from left side of window until this condition is no longer met
+		// Keep popping element from left side of window until this condition is no longer met
 		for distinctCharacterCount == len(countT) {
 			if minSubstring == "" {
 				minSubstring = s[left : right+1] // end is excluded, hence end + 1
 			}
-			if right-left+1 < len(minSubstring) {
+			if right-left+1 < len(minSubstring) { // right-left+1 gives windows size
 				minSubstring = s[left : right+1]
 			}
 
@@ -287,7 +286,7 @@ func minWindow(s string, t string) string {
 				distinctCharacterCount--
 			}
 
-			// expan the window
+			// move the window
 			left++
 		}
 		right++

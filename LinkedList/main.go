@@ -137,7 +137,7 @@ func reverse(head *nodeInt) *nodeInt {
 	for head != nil {
 		head.Next, prev, head = prev, head, head.Next // This single line can replace all of the below code. Underthe hood this will temporarily create variables and swap them, so we don't need to worry abt loosing head.Next on the first swap
 		// Next := head.Next
-		// head.Next = prev
+		// head.Next = prev // first node's next lement should be nill for it to become last node yh?
 		// prev = head
 		// head = Next
 	}
@@ -354,11 +354,12 @@ func removeNthFromEnd(head *node, n int) *node {
 	left := dummy
 	right := head
 
+	// This is just to initially move right n positions away
 	for n > 0 && right != nil {
 		right = right.Next
 		n--
 	}
-
+	// This is the main algorithm
 	for right != nil {
 		left = left.Next
 		right = right.Next

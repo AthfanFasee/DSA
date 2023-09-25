@@ -32,18 +32,19 @@ func twoSum(nums []int, target int) []int {
 // Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0
 func Best(prices []int) int {
 	// All We need is the difference (maxSale)
-	// Keep track of the leftest value (to minus from every price from array). Start with very first element
-	leftPrice := prices[0]
+	// Keep track of the least left value (to minus from every price from array). Start with very first element
+	left := prices[0]
 	maxSale := 0
 	for _, price := range prices {
-		// If any price is found as lefter than current lefter, update it
-		if price < leftPrice {
-			leftPrice = price
+		// If any price is found as lesser than current left pointer (the value in the pointer), update it
+		// There's only one rule to my left pointer which is to be the lowest array element so far
+		if price < left {
+			left = price
 		}
 
 		// Minus leftprice from each current price and keep trackof maximum difference in a variable
-		if price-leftPrice > maxSale {
-			maxSale = price - leftPrice
+		if price-left > maxSale {
+			maxSale = price - left
 		}
 	}
 
@@ -59,7 +60,7 @@ func subArray(nums []int) int {
 		if curSum >= 0 {
 			curSum += v // If sum is greater than or equal to 0 just add the current element to it too (as this new array which we find the sum for should be condigious, we won't miss anything by doing this)
 		} else {
-			curSum = v // If the sum before this is lesst han zero, replace it with current element. As the negative sum won't help at all in finding maxsum
+			curSum = v // If the sum before this is less than zero, replace it with current element. As the negative sum won't help at all in finding maxsum
 		}
 
 		if maxSum < curSum { // For an example if [5,4,-8,1,2]. When -8 comes and reduces sum to 1, the max won't be replaces. It will be holding 9 which can be created by subarray [5,4].
