@@ -392,6 +392,7 @@ func mergeKLists(lists []*node) *node {
 }
 
 // This is also valid answer for leetcode 21 (merge two sorted linked lists)
+// ACTUALLY The normal way of doing this is much easier. It's provided above
 func mergeTwoSortedListsRecursive(l1, l2 *node) *node {
 	if l1 == nil {
 		return l2

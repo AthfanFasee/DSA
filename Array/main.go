@@ -156,10 +156,12 @@ func ProductofArrayExceptSelf(nums []int) []int {
 }
 
 // Given an integer array nums, find a subarray that has the largest product, and return the product.
+// SOLUTION VIDEO MUST
 func maxProduct(nums []int) int {
+	// [-2,0,-1]
 	min, max, res := 1, 1, nums[0] // 1 <= nums.length <= 2 * 10^4
 	for _, n := range nums {
-		min, max = Min(n, Min(min*n, max*n)), Max(n, Max(min*n, max*n))
+		min, max = Min(n, Min(min*n, max*n)), Max(n, Max(min*n, max*n)) // This should be one line, or we need a temp variable
 		res = Max(res, max)
 	}
 	return res
@@ -209,7 +211,6 @@ func longestConsecutive(nums []int) int {
 		// We check if n-1 is in the set. If it is, then n is not the beginning of a sequence
 		// and we go to the next number immediately.
 		if _, ok := numsSet[n-1]; !ok {
-			// Otherwise, we increment n in a loop to see if the next consecutive value is stored in nums.
 			seqLen := 1
 			for {
 				if _, ok = numsSet[n+seqLen]; ok {
@@ -293,6 +294,26 @@ func min(a, b int) int {
 	return b
 }
 
+// 11. Container With Most Water
+func maxArea(heights []int) int {
+	res := 0
+	left, right := 0, len(heights)-1
+
+	for left < right {
+		area := (right - left) * min(heights[left], heights[right])
+		res = Max(res, area)
+
+		if heights[left] < heights[right] {
+			left++
+		} else {
+			right--
+		}
+	}
+
+	return res
+}
+
+// Binary Search Problems.
 // 33. Search in Rotated Sorted Array
 func search(nums []int, target int) int {
 	// Find the pivot.
@@ -402,25 +423,6 @@ func findPivot(nums []int) int {
 	}
 
 	return left
-}
-
-// 11. Container With Most Water
-func maxArea(heights []int) int {
-	res := 0
-	left, right := 0, len(heights)-1
-
-	for left < right {
-		area := (right - left) * min(heights[left], heights[right])
-		res = Max(res, area)
-
-		if heights[left] < heights[right] {
-			left++
-		} else {
-			right--
-		}
-	}
-
-	return res
 }
 
 func main() {

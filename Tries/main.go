@@ -66,37 +66,40 @@ func Constructor2() Trie {
 }
 
 func (this *Trie) Insert(word string) {
-	cur := this
-	for _, v := range word {
-		i := v - 'a'
-		if cur.Children[i] == nil {
-			cur.Children[i] = &Trie{}
+	for _, r := range word {
+		i := r - 'a'
+		if this.Children[i] == nil {
+			this.Children[i] = &Trie{}
 		}
-		cur = cur.Children[i]
+
+		this = this.Children[i]
 	}
-	cur.IsWord = true
+
+	this.IsWord = true
 }
 
 func (this *Trie) Search(word string) bool {
-	cur := this
-	for _, v := range word {
-		i := v - 'a'
-		if cur.Children[i] == nil {
+	for _, r := range word {
+		i := r - 'a'
+		if this.Children[i] == nil {
 			return false
 		}
-		cur = cur.Children[i]
+
+		this = this.Children[i]
 	}
-	return cur.IsWord
+
+	return this.IsWord
 }
 
 func (this *Trie) StartsWith(prefix string) bool {
-	cur := this
-	for _, v := range prefix {
-		i := v - 'a'
-		if cur.Children[i] == nil {
+	for _, r := range prefix {
+		i := r - 'a'
+		if this.Children[i] == nil {
 			return false
 		}
-		cur = cur.Children[i]
+
+		this = this.Children[i]
 	}
+
 	return true
 }

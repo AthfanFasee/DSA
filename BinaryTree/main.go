@@ -434,7 +434,7 @@ func dfs(root *Node, globalMax *int) int {
 		return 0
 	}
 
-	pathSumFromLeft := max(dfs(root.Left, globalMax), 0)
+	pathSumFromLeft := max(dfs(root.Left, globalMax), 0) // The reason we say max of 0 and whatever dsf retusn is the possibly of minus values.
 	pathSumFromRight := max(dfs(root.Right, globalMax), 0)
 
 	*globalMax = max(*globalMax, root.Val+pathSumFromLeft+pathSumFromRight)

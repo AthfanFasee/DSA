@@ -187,15 +187,16 @@ func characterReplacement(s string, k int) int {
 	res, maxf, left := 0, 0, 0
 
 	// bbaaa  k = 1
-	for right := 0; right < len(s); right++ {
-		count[s[right]] += 1 // s[right] will return a byte
+	for right, _ := range s {
+		count[s[right]]++ // s[right] will return a byte. Then update it's count in hash
 
 		maxf = max(maxf, count[s[right]])
 
 		// Move left pointer
-		if (right-left+1)-maxf > k { // Current winow - maximum appeared charcter should be less than k for this to be valid. So if it's bigger move left pointer
-			count[s[left]] -= 1 // When we decrement, we dont have to update max variable as reducing max variable wont have any effect on end result.
-			left += 1           // Bcs at the end we want the ,maximum length, so we dont care if maxf reduces
+		if (right-left+1)-maxf > k { // Current winow - maximum appeared charcter should be less than or equal to k for this to be valid. So if it's bigger move left pointer
+			// This order matters. Before u update left pointer value, update hash
+			count[s[left]]-- // When we decrement, we dont have to update max variable as reducing max variable wont have any effect on end result.
+			left++           // Bcs at the end we want the ,maximum length, so we dont care if maxf reduces
 		}
 
 		res = max(res, right-left+1)
@@ -233,7 +234,7 @@ func groupAnagramsMethod2(strs []string) [][]string {
 	hash := make(map[string][]string)
 
 	for _, word := range strs {
-		countword := make([]int, 26)
+		var countword [26]int
 
 		for _, r := range word {
 			countword[r-'a']++
